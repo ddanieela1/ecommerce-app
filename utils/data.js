@@ -2,8 +2,9 @@ const data = {
   products: [
     {
       name: 'Pen',
+      slug: 'pen',
       category: 'Stationary',
-      image: 'ecommerce-app/assets/pen.webp',
+      image: '../assets/pen_set.jpg',
       price: '19.99',
       brand: 'Sanrio',
       rating: '5',
@@ -13,8 +14,9 @@ const data = {
     },
     {
       name: 'Another Pen',
+      slug: 'another-pen',
       category: 'Stationary',
-      image: 'ecommerce-app/assets/pen.webp',
+      image: '../assets/pen.webp',
       price: '19.99',
       brand: 'Sanrio',
       rating: '5',
@@ -24,8 +26,9 @@ const data = {
     },
     {
       name: 'Cute Pen',
+      slug: 'cute-pen',
       category: 'Stationary',
-      image: 'ecommerce-app/assets/pen.webp',
+      image: '../assets/pen.webp',
       price: '19.99',
       brand: 'Sanrio',
       rating: '5',
