@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
-import React from 'react';
-import data from '../utils/data.js';
+import NextLink from 'next/link';
+import Link from '@mui/material/Link';
+import data from '/Users/liliangarcia/Desktop/Projects/ecommerce/ecommerce-app/utils/data.js';
+import Layout from '../../components/layout';
 
 export default function ProductView() {
   const router = useRouter();
@@ -11,8 +13,12 @@ export default function ProductView() {
   }
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-    </div>
+    <Layout title={product.name}>
+      <div>
+        <NextLink href="/" passHref>
+          <Link>Back to all products</Link>
+        </NextLink>
+      </div>
+    </Layout>
   );
 }

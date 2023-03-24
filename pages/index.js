@@ -8,9 +8,9 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import NextLink from 'next/link';
 
-import Layout from '../components/layout.js';
+import Layout from '../components/layout';
 import data from '../utils/data';
-import styles from '../utils/styles';
+// import ProductView from './product/[slug].js';
 
 export default function Home() {
   return (
@@ -27,7 +27,9 @@ export default function Home() {
                       component="img"
                       image={product.image}
                       title={product.name}
-                    ></CardMedia>
+                    >
+                      {/* <img src="product.image" /> */}
+                    </CardMedia>
                     <CardContent>
                       <Typography>{product.name}</Typography>
                     </CardContent>
