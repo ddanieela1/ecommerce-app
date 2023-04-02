@@ -6,14 +6,16 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 // import layout from 'next/legacy/image';
 import Grid from '@mui/material/Grid';
-import data from '/Users/liliangarcia/Desktop/Projects/ecommerce/ecommerce-app/utils/data.js';
+import data from '../../utils/data.js';
 import Layout from '../../components/layout';
 import { ListItem, Typography, Card, Button } from '@mui/material';
+import Product from '@/models/Product.js';
+import db from '@/utils/db.js';
 
-export default function ProductView() {
+export default function ProductView(props) {
+  const { product } = props;
   const router = useRouter();
-  const { slug } = router.query;
-  const product = data.products.find((item) => item.slug === slug);
+
   if (!product) {
     return <div>Product is not available at this time</div>;
   }
@@ -90,4 +92,18 @@ export default function ProductView() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const { slug } = params;
+
+  await db.connect();
+  const product = await Product.findOne({ slug }).lean();
+  await db.disconnect();
+  return {
+    props: {
+      product: db.convertDocToObj(product),
+    },
+  };
 }
