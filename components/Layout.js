@@ -1,4 +1,4 @@
-import React, { title, children } from 'react';
+import React, { title, children, useContext } from 'react';
 import Head from 'next/head';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,8 +7,11 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import NextLink from 'next/link';
-
+import Badge from '@mui/material/Badge';
+import { Store } from '../utils/Store';
 import { styled } from '@mui/material';
+import { useState } from 'react';
+import axios from 'axios';
 
 // const mystyle = {
 //   color: 'white',
@@ -49,6 +52,8 @@ const NavBarContainer = styled(Container)(({ theme }) => ({
 }));
 
 export default function Layout({ children }) {
+  const { state, dispatch } = useContext(Store);
+  const { cart } = state;
   return (
     <div>
       <Head>
@@ -98,7 +103,13 @@ export default function Layout({ children }) {
         >
           <NavLink variant="body1">
             <NextLink href="/cart" passHref>
-              Cart
+              {cart.cartItems.length > 0 ? (
+                <Badge color="secondary" badgeContent={cart.cartItems.length}>
+                  Cart
+                </Badge>
+              ) : (
+                'Cart'
+              )}
             </NextLink>
           </NavLink>
 

@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import NextLink from 'next/link';
 
 import Layout from '../components/layout';
-import data from '../utils/data';
+
 import db from '../utils/db';
 import Product from '@/models/Product';
 

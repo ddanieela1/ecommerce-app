@@ -1,24 +1,38 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { ListItem, Typography, Card, Button } from '@mui/material';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
-// import layout from 'next/legacy/image';
 import Grid from '@mui/material/Grid';
-import data from '../../utils/data.js';
 import Layout from '../../components/layout';
-import { ListItem, Typography, Card, Button } from '@mui/material';
+
+// models
 import Product from '@/models/Product.js';
+
+// files
 import db from '@/utils/db.js';
+import { Store } from '../utils/Store';
 
 export default function ProductView(props) {
+  const { dispatch } = useContext(Store);
   const { product } = props;
   const router = useRouter();
 
   if (!product) {
     return <div>Product is not available at this time</div>;
   }
+
+  const handleAddToCart = async () => {
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.inStock <= 0) {
+      window.alert('Product out of stock');
+      return;
+    }
+    dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity: 1 } });
+  };
 
   return (
     <Layout title={product.name}>
@@ -75,7 +89,11 @@ export default function ProductView(props) {
                     <Grid item xs={6}>
                       <Typography>
                         {product.inStock > 0 ? (
-                          <Button fullWidth="variant" color="primary">
+                          <Button
+                            fullWidth="variant"
+                            color="primary"
+                            onClick={handleAddToCart}
+                          >
                             Add to Cart
                           </Button>
                         ) : (
