@@ -1,4 +1,5 @@
 import React, { title, children, useContext } from 'react';
+import { useEffect } from 'react';
 import Head from 'next/head';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';

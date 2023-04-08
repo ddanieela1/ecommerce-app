@@ -14,7 +14,7 @@ import Product from '@/models/Product.js';
 
 // files
 import db from '@/utils/db.js';
-import { Store } from '../utils/Store';
+import { Store } from '../../utils/Store';
 
 export default function ProductView(props) {
   const { dispatch } = useContext(Store);
