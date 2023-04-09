@@ -6,7 +6,7 @@ export const Store = createContext('');
 const initialState = {
   cart: {
     cartItems: Cookies.get('cartItems')
-      ? JSON.parse(Cookies(get.cartItems))
+      ? JSON.parse(Cookies.get('cartItems'))
       : [],
   },
 };
@@ -18,6 +18,7 @@ function reducer(state, action) {
       const itemExists = state.cart.cartItems.find(
         (item) => item._id === newItem._id
       );
+
       const cartItems = itemExists
         ? state.cart.cartItems.map((item) =>
             item.name === itemExists.name ? newItem : item
@@ -28,6 +29,21 @@ function reducer(state, action) {
     }
     default:
       return state;
+
+    // case 'ADD_DUPLICATE': {
+    //   const addDuplicate = action.payload;
+    //   const duplicateItem = state.cart.cartItems.find(
+    //     (item) => item._id === itemExists
+    //   );
+
+    //   const cartItems = duplicateItem
+    //     ? state.cart.cartItems.map((item) =>
+    //         item._id === duplicateItem._id ? addDuplicate : item
+    //       )
+    //     : [...state.cart.cartItems, addDuplicate];
+    //   Cookies.set('cartItems', JSON.stringify(cartItems));
+    //   return { ...state, cart: { ...state.cart, cartItems } };
+    // }
   }
 }
 
