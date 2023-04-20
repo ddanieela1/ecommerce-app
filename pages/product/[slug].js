@@ -17,7 +17,7 @@ import db from '@/utils/db.js';
 import { Store } from '../../utils/Store';
 
 export default function ProductView(props) {
-  const { dispatch } = useContext(Store);
+  const { state, dispatch } = useContext(Store);
   const { product } = props;
   const router = useRouter();
 
@@ -26,12 +26,16 @@ export default function ProductView(props) {
   }
 
   const handleAddToCart = async () => {
+    const itemExists = state.cart.cartItems.find((p) => p._id === product._id);
+    const quantity = itemExists ? itemExists.quantity + 1 : 1;
+
     const { data } = await axios.get(`/api/products/${product._id}`);
-    if (data.inStock <= 0) {
+
+    if (data.inStock < quantity) {
       window.alert('Product out of stock');
       return;
     }
-    dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity: 1 } });
+    dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity } });
     router.push('/cart');
   };
 
