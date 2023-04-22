@@ -115,8 +115,8 @@ export default function Layout({ children }) {
           </NavLink>
 
           <NavLink>
-            <NextLink href="/login" passHref>
-              Log In
+            <NextLink href="/signIn" passHref>
+              Sign In
             </NextLink>
           </NavLink>
 
