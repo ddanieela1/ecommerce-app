@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 import Layout from '@/components/layout';
 import { Store } from '@/utils/Store';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import {
   TableContainer,
   TableHead,
@@ -21,13 +22,17 @@ import {
   Card,
   List,
 } from '@mui/material';
-import axios from 'axios';
 
 export default function CartView() {
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
+
+  const checkoutHandler = () => {
+    router.push('/shipping');
+  };
 
   const updateItemHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`);
@@ -135,7 +140,11 @@ export default function CartView() {
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button color="primary" variant="contained">
+                  <Button
+                    onClick={checkoutHandler}
+                    color="primary"
+                    variant="contained"
+                  >
                     Checkout
                   </Button>
                 </ListItem>
