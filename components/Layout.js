@@ -61,7 +61,6 @@ export default function Layout({ children }) {
         <title>{title ? `${title}-Bingo` : 'Bingo'}</title>
       </Head>
       <NavBarContainer>
-        {/* <AppBar position="static"> */}
         <Box
           sx={{
             display: 'flex',
@@ -115,17 +114,10 @@ export default function Layout({ children }) {
           </NavLink>
 
           <NavLink>
-            <NextLink href="/signIn" passHref>
+            <NextLink href="/signin" passHref>
               Sign In
             </NextLink>
           </NavLink>
-
-          {/* <Toolbar> */}
-          {/* <NextLink href="/" passHref>
-            <Typography color="white">Bingo</Typography>
-          </NextLink> */}
-          {/* </Toolbar> */}
-          {/* </AppBar> */}
         </Box>
       </NavBarContainer>
       <Container>{children}</Container>

@@ -5,11 +5,13 @@ import Product from '../../models/Product';
 import User from '../../models/User';
 
 const handler = nc();
+// const bodyParser = require('body-parser');
 
 handler.get(async (req, res) => {
+  // app.use(bodyParser.urlencoded({ extended: true }));
   await db.connect();
   await User.deleteMany();
-  await User.insertMany(data.products);
+  await User.insertMany(data.users);
   await Product.deleteMany();
   await Product.insertMany(data.products);
   await db.disconnect();
