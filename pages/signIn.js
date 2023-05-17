@@ -41,10 +41,6 @@ export default function SignIn() {
     router.push('/register');
   };
 
-  const signinHandler = () => {
-    router.push('/');
-  };
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
