@@ -1,5 +1,3 @@
-// import React, { useState } from 'react';
-// import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import axios from 'axios';
 import {
@@ -36,8 +34,9 @@ export default function SignIn() {
     event.preventDefault();
   };
 
+  const router = useRouter();
+
   const registerHandler = () => {
-    const router = useRouter();
     router.push('/register');
   };
 
@@ -48,17 +47,19 @@ export default function SignIn() {
     e.preventDefault();
     // check user & pass match
     try {
-      let { data } = await axios.post('/api/users/signin', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const { data } = await axios.post('/api/users/signin', {
         email,
         password,
       });
       alert('login successful');
-      console.log(response.data);
+      console.log(data);
     } catch (err) {
-      // alert(err.message);
+      if (err.response && err.response.status === 401) {
+        alert('Invalid email or password. Please try again.');
+      } else {
+        alert(err.message);
+      }
+
       console.log(err);
     }
   };
@@ -149,7 +150,7 @@ export default function SignIn() {
             name="password"
             inputprops={{ type: 'password' }}
             endAdornment={
-              <InputAdornment>
+              <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
