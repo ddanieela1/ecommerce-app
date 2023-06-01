@@ -10,70 +10,63 @@ export default function Register() {
   };
 
   return (
-    <Paper sx={paperStyle} elevation={10}>
-      <Box
-        component="form"
-        sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1rem',
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <Typography variant="h5">Register</Typography>
-        <div>
-          <TextField
-            required
-            id="outlined-required"
-            label="First Name"
-            grid-xs-7
-            spacing-xs-1
-          />
-        </div>
+    <Paper sx={paperStyle}>
+      <Grid container spacing={2}>
+        <Box
+          component="form"
+          sx={{
+            '& .MuiTextField-root': { m: 1, width: '25ch' },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem',
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          {/* <div>
+          <Typography variant="h5">Register</Typography>
+        </div> */}
+          <Grid item xs>
+            <TextField required id="outlined-required" label="First Name" />
+          </Grid>
 
-        <div>
-          <TextField
-            required
-            id="outlined-required"
-            label="Last Name"
-            grid-xs-2
-          />
-        </div>
+          <Grid item xs>
+            <TextField required id="outlined-required" label="Last Name" />
+          </Grid>
 
-        <div>
-          <TextField
-            required
-            id="outlined-password-input"
-            label="Password"
-            type="password"
-            autoComplete="password"
-          />
-        </div>
+          <div>
+            <TextField
+              required
+              id="outlined-password-input"
+              label="Password"
+              type="password"
+              autoComplete="password"
+            />
+          </div>
 
-        <div>
-          <TextField
-            required
-            id="outlined-password-input"
-            label="Retype Password"
-            type="password"
-            autoComplete="password"
-          />
-        </div>
+          <div>
+            <TextField
+              required
+              id="outlined-password-input"
+              label="Retype Password"
+              type="password"
+              autoComplete="password"
+            />
+          </div>
 
-        <div>
-          <TextField
-            id="outlined-email"
-            label="Email"
-            type="email"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </div>
-      </Box>
+          <div>
+            <TextField
+              id="outlined-email"
+              label="Email"
+              type="email"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        </Box>
+      </Grid>
     </Paper>
   );
 }
