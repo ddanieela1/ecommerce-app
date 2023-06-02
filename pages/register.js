@@ -1,72 +1,75 @@
 import React from 'react';
-import { Typography, Box, TextField, Paper, Grid } from '@mui/material';
+import { Typography, Box, TextField, Paper, Grid, Button } from '@mui/material';
 
 export default function Register() {
   const paperStyle = {
-    padding: 20,
-    height: '60vh',
-    width: 500,
-    margin: '80px auto',
+    padding: 2,
+    width: 400,
+    margin: '0 auto',
+    // padding: 20,
+    // height: '90vh',
+    // width: 600,
+    // margin: '80px auto',
   };
 
   return (
-    <Paper sx={paperStyle}>
-      <Grid container spacing={2}>
-        <Box
-          component="form"
-          sx={{
-            '& .MuiTextField-root': { m: 1, width: '25ch' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          {/* <div>
-          <Typography variant="h5">Register</Typography>
-        </div> */}
-          <Grid item xs>
-            <TextField required id="outlined-required" label="First Name" />
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <Paper sx={paperStyle}>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center" gutterBottom>
+              Register
+            </Typography>
           </Grid>
 
-          <Grid item xs>
-            <TextField required id="outlined-required" label="Last Name" />
+          <Grid item xs={6} sx={{ width: '100%' }}>
+            <TextField label="First Name" variant="filled" />
           </Grid>
 
-          <div>
+          <Grid item xs={6} sx={{ width: '100%' }}>
+            <TextField variant="filled" label="Last Name" />
+          </Grid>
+
+          <Grid item xs={6}>
             <TextField
-              required
-              id="outlined-password-input"
+              align="center"
+              variant="filled"
               label="Password"
               type="password"
-              autoComplete="password"
             />
-          </div>
+          </Grid>
 
-          <div>
+          <Grid item xs={6}>
             <TextField
-              required
-              id="outlined-password-input"
-              label="Retype Password"
+              align="center"
+              variant="filled"
+              label="Re-type Password"
               type="password"
-              autoComplete="password"
             />
-          </div>
-
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <TextField
+              align="center"
+              variant="filled"
               id="outlined-email"
               label="Email"
               type="email"
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
-          </div>
-        </Box>
-      </Grid>
-    </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" fullWidth>
+              Register
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+    </div>
   );
 }

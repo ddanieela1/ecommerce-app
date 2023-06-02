@@ -19,29 +19,38 @@ import {
   Link,
 } from '@mui/material';
 
+import Store from '../utils/Store';
+
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { SettingsSystemDaydreamOutlined } from '@mui/icons-material';
+import { useContext } from 'react';
+import Cookies from 'js-cookie';
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
+  const { redirect } = router.query;
+  const router = useRouter();
+
+  if (userInfo) {
+    router.push('/');
+  }
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  const router = useRouter();
-
   const registerHandler = () => {
     router.push('/register');
   };
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +60,10 @@ export default function SignIn() {
         email,
         password,
       });
-      alert('login successful');
+      dispatch({ type: USER_LOGIN, payload: data });
+      Cookies.set('userInfo', data);
+      router.push(redirect || '/');
+
       console.log(data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
