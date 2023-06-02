@@ -1,5 +1,9 @@
 import React, { title, children, useContext } from 'react';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
 import Head from 'next/head';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,17 +13,10 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import NextLink from 'next/link';
 import Badge from '@mui/material/Badge';
-import { Store } from '../utils/Store';
 import { styled } from '@mui/material';
-import { useState } from 'react';
-import axios from 'axios';
+import Button from '@mui/material/Button';
 
-// const mystyle = {
-//   color: 'white',
-//   backgroundColor: 'DodgerBlue',
-//   padding: '10px',
-//   fontFamily: 'Arial',
-// };
+import { Store } from '../utils/Store';
 
 const NavLink = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
@@ -54,7 +51,7 @@ const NavBarContainer = styled(Container)(({ theme }) => ({
 
 export default function Layout({ children }) {
   const { state, dispatch } = useContext(Store);
-  const { cart } = state;
+  const { cart, userInfo } = state;
   return (
     <div>
       <Head>
@@ -114,9 +111,13 @@ export default function Layout({ children }) {
           </NavLink>
 
           <NavLink>
-            <NextLink href="/signin" passHref>
-              Sign In
-            </NextLink>
+            {userInfo ? (
+              <Button>userInfo.name</Button>
+            ) : (
+              <NextLink href="/signin" passHref>
+                Sign In
+              </NextLink>
+            )}
           </NavLink>
         </Box>
       </NavBarContainer>
