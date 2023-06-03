@@ -13,7 +13,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import NextLink from 'next/link';
 import Badge from '@mui/material/Badge';
-import { styled } from '@mui/material';
+import { Menu, MenuItem, styled } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import { Store } from '../utils/Store';
@@ -52,6 +52,14 @@ const NavBarContainer = styled(Container)(({ theme }) => ({
 export default function Layout({ children }) {
   const { state, dispatch } = useContext(Store);
   const { cart, userInfo } = state;
+  const [anchorEl, setAnchorel] = useState(null);
+  const signinClickHandler = (e) => {
+    setAnchorel(e.currentTarget);
+  };
+
+  const signinMenuCloseHandler = () => {
+    setAnchorel(null);
+  };
   return (
     <div>
       <Head>
@@ -112,7 +120,28 @@ export default function Layout({ children }) {
 
           <NavLink>
             {userInfo ? (
-              <Button>userInfo.name</Button>
+              <>
+                <Button
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={signinClickHandler}
+                >
+                  {userInfo.name}
+                </Button>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={signinMenuCloseHandler}
+                >
+                  <MenuItem onClick={signinMenuCloseHandler}>Profile</MenuItem>
+                  <MenuItem onClick={signinMenuCloseHandler}>
+                    My Account
+                  </MenuItem>
+                  <MenuItem onClick={signinMenuCloseHandler}>Logout</MenuItem>
+                </Menu>
+              </>
             ) : (
               <NextLink href="/signin" passHref>
                 Sign In

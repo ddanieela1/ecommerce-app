@@ -34,7 +34,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { state, dispatch } = useContext(Store);
+  // const { state, dispatch } = useContext(Store);
   const { userInfo } = state;
   const { redirect } = router.query;
   const router = useRouter();
