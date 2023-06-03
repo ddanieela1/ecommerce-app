@@ -1,6 +1,5 @@
-import React, { title, children, useContext } from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { title, children, useEffect, useState, useContext } from 'react';
+
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -17,6 +16,9 @@ import { Menu, MenuItem, styled } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import { Store } from '../utils/Store';
+import { useRouter } from 'next/router';
+
+import { USER_LOGOUT } from '../utils/Store';
 
 const NavLink = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
@@ -50,15 +52,25 @@ const NavBarContainer = styled(Container)(({ theme }) => ({
 }));
 
 export default function Layout({ children }) {
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const { cart, userInfo } = state;
-  const [anchorEl, setAnchorel] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+
   const signinClickHandler = (e) => {
-    setAnchorel(e.currentTarget);
+    setAnchorEl(e.currentTarget);
   };
 
   const signinMenuCloseHandler = () => {
-    setAnchorel(null);
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    dispatch({ type: USER_LOGOUT });
+    Cookies.remove('userInfo');
+    Cookies.remove('cartItems');
+    router.push('/signin');
   };
   return (
     <div>
@@ -139,7 +151,7 @@ export default function Layout({ children }) {
                   <MenuItem onClick={signinMenuCloseHandler}>
                     My Account
                   </MenuItem>
-                  <MenuItem onClick={signinMenuCloseHandler}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>
             ) : (
