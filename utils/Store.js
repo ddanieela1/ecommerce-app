@@ -49,6 +49,9 @@ function reducer(state, action) {
     case 'USER_LOGOUT': {
       return { ...state, userInfo: null, cart: { cartItems: [] } };
     }
+    case 'USER_REGISTER': {
+      return { ...state, userInfo: [], cart: { cartItems: [] } };
+    }
     default:
       return state;
 

@@ -1,15 +1,57 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Typography, Box, TextField, Paper, Grid, Button } from '@mui/material';
+import Cookie from 'js-cookie'
+import { Store } from '@/utils/Store';
+import Cookies from 'js-cookie';
 
 export default function Register() {
+  const router = userRouter();
+  const { redirect } = router.query;
+  const { state, dispatch } = useContext(Store);
+  const userInfo = state;
+
+  useEffect(() => {
+    if (userInfo) {
+      router.push('/');
+    }
+  }, []);
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const submitHandler = async (e)=>{
+    e.preventDefault()
+    if(password !== confirmPassword){
+      alert('Password does not match. Try again')
+      return;
+    }
+    try{
+      const {data} =  await axios.post('/api/users/register'),{
+        name,
+        email,
+        password,
+  
+
+      }
+      dispatch({ type: USER_REGISTER, payload: data });
+      Cookies.set('userInfo', data);
+      router.push(redirect || '/');
+
+      console.log(data);
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        alert('Invalid email or password. Please try again.');
+      } else {
+        alert(err.message);
+      }
+    }
+
   const paperStyle = {
     padding: 2,
     width: 400,
     margin: '0 auto',
-    // padding: 20,
-    // height: '90vh',
-    // width: 600,
-    // margin: '80px auto',
   };
 
   return (
