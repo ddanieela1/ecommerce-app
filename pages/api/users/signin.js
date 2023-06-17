@@ -1,8 +1,14 @@
-import nc from 'next-connect';
-import bcrypt from 'bcryptjs';
-import db from '../../../utils/db';
-import User from '../../../models/User';
-import { signToken } from '../../../utils/auth';
+// import nc from 'next-connect';
+// import bcrypt from 'bcryptjs';
+// import db from '../../../utils/db';
+// import User from '../../../models/User';
+// import { signToken } from '../../../utils/auth';
+
+const bcrypt = require('bcryptjs');
+const db = require('../../../utils/db');
+const { User } = require('../../../models/User').default;
+const { signToken } = require('../../../utils/auth');
+const nc = require('next-connect');
 
 const handler = nc();
 
@@ -48,6 +54,7 @@ handler.post(async (req, res) => {
         email: user.email,
         isAdmin: user.isAdmin,
       });
+      console.log(token, user._id, user.name, user.email, user.isAdmin);
     } else {
       res.status(401).send({ message: 'Invalid username or password' });
     }
@@ -57,4 +64,4 @@ handler.post(async (req, res) => {
   }
 });
 
-export default handler;
+module.exports = handler;
