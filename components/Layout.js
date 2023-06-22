@@ -15,10 +15,9 @@ import Badge from '@mui/material/Badge';
 import { Menu, MenuItem, styled } from '@mui/material';
 import Button from '@mui/material/Button';
 
-import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
-
-import { USER_LOGOUT } from '../utils/Store';
+import { Store } from '../utils/Store';
+import { USER_LOGOUT, USER_SIGNIN } from '../utils/Store';
 
 const NavLink = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
@@ -51,6 +50,18 @@ const NavBarContainer = styled(Container)(({ theme }) => ({
   },
 }));
 
+// const navBarButton = styled(Button)(({ theme }) => ({
+//   color: 'white',
+//   textTransform: 'initial',
+// }));
+
+const navBarButton = {
+  color: 'black',
+  // backgroundColor: 'white',
+  textTransform: 'initial',
+  backgroundColor: 'transparent',
+};
+
 export default function Layout({ children }) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
@@ -72,6 +83,7 @@ export default function Layout({ children }) {
     Cookies.remove('cartItems');
     router.push('/signin');
   };
+
   return (
     <div>
       <Head>
@@ -134,6 +146,8 @@ export default function Layout({ children }) {
             {userInfo ? (
               <>
                 <Button
+                  // sx={{ color: 'white' }}
+                  style={navBarButton}
                   aria-controls="simple-menu"
                   aria-haspopup="true"
                   onClick={signinClickHandler}

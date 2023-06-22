@@ -1,6 +1,5 @@
-// import React from 'react';
-import * as React from 'react';
-// const React = require('react');
+// import * as React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import {
   Card,
@@ -48,6 +47,12 @@ export default function SignIn() {
   const router = useRouter();
   const { redirect } = router.query;
 
+  useEffect(() => {
+    if (userInfo) {
+      router.push('/');
+    }
+  }, []);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -55,14 +60,12 @@ export default function SignIn() {
 
   const submitHandler = async ({ email, password }) => {
     closeSnackbar();
-    // const token = signToken(user);
-
     // check user & pass match
     try {
       // const token = Cookies.get('userInfo')?.token;
       const { data } = await axios.post(
         'api/users/signin',
-        // JSON.stringify,
+
         {
           email,
           password,

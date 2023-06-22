@@ -18,7 +18,7 @@ handler.post(async (req, res) => {
   });
 
   // search for user in db
-  const createdUser = await newUser.save();
+  const user = await newUser.save();
   await db.disconnect();
 
   // compare plain text to encrypted text
