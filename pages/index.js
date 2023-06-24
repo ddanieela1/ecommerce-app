@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import NextLink from 'next/link';
 import axios from 'axios';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 
 import { useContext } from 'react';
 import db from '../utils/db';

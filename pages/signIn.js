@@ -29,7 +29,7 @@ import { SettingsSystemDaydreamOutlined } from '@mui/icons-material';
 
 import Cookies from 'js-cookie';
 // import { USER_SIGNIN } from '../utils/Store.js';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 

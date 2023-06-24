@@ -1,24 +1,13 @@
 import React, { useEffect } from 'react';
-
-import {
-  Button,
-  TextField,
-  List,
-  ListItem,
-  Typography,
-  Link,
-} from '@mui/material';
-import NextLink from 'next/link';
-import { Store } from '../utils/Store';
-
+import { Controller, useForm } from 'react-hook-form';
+import { Button, TextField, List, ListItem, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState, useContext } from 'react';
-
 import Cookies from 'js-cookie';
-// import { USER_SIGNIN } from '../utils/Store.js';
-import Layout from '@/components/layout';
-import { Controller, useForm } from 'react-hook-form';
-import CheckoutWizard from '../components/checkoutWizard';
+
+import Layout from '@/components/Layout';
+import CheckoutWizard from '../components/CheckoutWizard';
+import { Store } from '../utils/Store';
 
 export default function Shipping() {
   const {

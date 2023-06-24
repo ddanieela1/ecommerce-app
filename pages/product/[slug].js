@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import Grid from '@mui/material/Grid';
-import Layout from '../../components/layout';
+import Layout from '../../components/Layout';
 
 // models
 import Product from '@/models/Product.js';

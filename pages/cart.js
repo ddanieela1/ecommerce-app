@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import Image from 'next/image';
 import React, { useContext } from 'react';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import { Store } from '@/utils/Store';
 import { useRouter } from 'next/router';
 import axios from 'axios';
