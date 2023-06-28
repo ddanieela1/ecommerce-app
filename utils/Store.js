@@ -8,10 +8,14 @@ const initialState = {
     cartItems: Cookies.get('cartItems')
       ? JSON.parse(Cookies.get('cartItems'))
       : [],
-    shippingAddress: Cookies.get('shippingAddress')
-      ? JSON.parse(Cookies.get('shippingAddress'))
-      : {},
   },
+  paymentMethod: Cookies.get('paymentMethod')
+    ? Cookies.get('paymentMethod')
+    : {},
+  saveShippingAddress: Cookies.get('saveShippingAddress')
+    ? JSON.parse(Cookies.get('saveShippingAddress'))
+    : '',
+
   userInfo: {
     cartItems:
       Cookies.get('userInfo') ||
@@ -61,6 +65,12 @@ function reducer(state, action) {
       return {
         ...state,
         cart: { ...state.cart, saveShippingAddress: action.payload },
+      };
+    }
+    case 'SAVE_PAYMENT_METHOD': {
+      return {
+        ...state,
+        cart: { ...state.cart, paymentMethod: action.payload },
       };
     }
     default:

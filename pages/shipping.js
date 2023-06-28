@@ -200,7 +200,7 @@ export default function Shipping() {
               }}
               render={({ field }) => (
                 <TextField
-                  fullWidth
+                  fullwidth="true"
                   variant="outlined"
                   id="country"
                   label="Country"
@@ -220,7 +220,7 @@ export default function Shipping() {
           </ListItem>
           <div>
             <Button
-              fullWidth
+              fullwidth="true"
               color="primary"
               variant="contained"
               style={bttnStyle}

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useContext, useState, useEffect } from 'react';
 
 import { Store } from '../utils/Store';
-import CheckoutWizard from '@/components/checkoutWizard';
+import CheckoutWizard from '../components/CheckoutWizard';
 import {
   FormControlLabel,
   List,
@@ -33,7 +33,15 @@ export default function Payment() {
   //   }
   // }, []);
   const submitHandler = (e) => {
+    closeSnackbar();
     e.preventDefault();
+    if (!paymentMethod) {
+      enqueueSnackbar('Payment method is missing', { variant: 'error' });
+    } else {
+      dispatch({ type: 'SAVE_PAYMENT_METHOD', payload: paymentMethod });
+      Cookies.set('paymentMethod', paymentMethod);
+      router.push('/placeorder');
+    }
   };
   return (
     <Layout title="Payment">
@@ -61,15 +69,20 @@ export default function Payment() {
           </ListItem>
 
           <ListItem>
-            <Button fullWidth type="submit" variant="contained" color="primary">
+            <Button
+              fullwidth="true"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Continue
             </Button>
           </ListItem>
           <ListItem>
             <Button
-              fullWidth
+              fullwidth="true"
               type="submit"
-              variant="outlined"
+              variant="contained"
               color="primary"
               onClick={() => {
                 router.push('/shipping');
