@@ -1,7 +1,8 @@
 import NextLink from 'next/link';
 import Image from 'next/image';
-import React, { useContext, useEffect } from 'react';
-import Layout from '@/components/Layout';
+import React, { useContext, useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+import { getError } from '../utils/error';
 import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
 import CheckoutWizard from '../components/CheckoutWizard';
@@ -24,14 +25,12 @@ import {
   TableCell,
   Card,
   List,
-  Tab,
   CircularProgress,
 } from '@mui/material';
 
 function PlaceOrder() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const {
     userInfo,
     cart: { cartItems, shippingAddress, paymentMethod },
@@ -41,15 +40,51 @@ function PlaceOrder() {
   const itemsPrice = round(
     cartItems.reduce((a, c) => a + c.price * c.quantity, 0)
   );
-  const shippingPrice = itemsPrice > 200 ? 0 : 15;
+  const shippingPrice = itemsPrice > 200 ? 0 : 15.0;
   const taxPrice = round(itemsPrice * 0.15);
   const totalPrice = round(itemsPrice + shippingPrice + taxPrice);
 
-  useEffect(() => {
-    if (!paymentMethod) {
-      router.push('/signin?redirect=/shipping');
+  // useEffect(() => {
+  //   if (!paymentMethod) {
+  //     router.push('/signin?redirect=/shipping');
+  //   }
+  //   if (cartItems.length === 0) {
+  //     router.push('/cart');
+  //   }
+  // }, []);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
+  const placeOrderHandler = async () => {
+    closeSnackbar();
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        'api/orders',
+        {
+          orderItems: cartItems,
+          shippingAddress,
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          totalPrice,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      dispatch({ type: 'CLEAR_CART' });
+      Cookies.remove('cartItems');
+      setLoading(false);
+      router.push(`order/${data._id}`);
+    } catch (err) {
+      setLoading(false);
+      enqueueSnackbar(getError(err), { variant: 'error' });
     }
-  }, []);
+  };
+
   return (
     <Layout title="Review Order">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
@@ -62,9 +97,15 @@ function PlaceOrder() {
           <Card>
             <List>
               <ListItem>
-                {shippingAddress.fullName},{shippingAddress.address},{''}
-                {shippingAddress.city},{shippingAddress.postalCode},{''}
-                {shippingAddress.country}
+                {shippingAddress ? (
+                  <>
+                    {shippingAddress.fullName},{shippingAddress.address},{''}
+                    {shippingAddress.city},{shippingAddress.postalCode},{''}
+                    {shippingAddress.country}
+                  </>
+                ) : (
+                  <Typography>No Address added</Typography>
+                )}
               </ListItem>
             </List>
           </Card>
@@ -106,12 +147,12 @@ function PlaceOrder() {
                           <TableCell>
                             <NextLink href={`/product/${item.slug}`} passHref>
                               <Link>
-                                <Image>
+                                <Image
                                   src={item.image}
                                   alt={item.name}
                                   width={50}
                                   height={50}
-                                </Image>
+                                />
                               </Link>
                             </NextLink>
                           </TableCell>
@@ -149,7 +190,7 @@ function PlaceOrder() {
                     <Typography>Items:</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography align="right">${itmesPrice}</Typography>
+                    <Typography align="right">${itemsPrice}</Typography>
                   </Grid>
                 </Grid>
               </ListItem>
@@ -166,7 +207,7 @@ function PlaceOrder() {
               <ListItem>
                 <Grid container>
                   <Grid item xs={6}>
-                    <Typography>shipping</Typography>
+                    <Typography>Shipping:</Typography>
                   </Grid>
                 </Grid>
               </ListItem>

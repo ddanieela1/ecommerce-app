@@ -29,11 +29,13 @@ export default function Shipping() {
     if (!userInfo) {
       router.push('/signin?redirect=/shipping');
     }
-    setValue('fullName', shippingAddress.fullName);
-    setValue('address', shippingAddress.address);
-    setValue('city', shippingAddress.city);
-    setValue('postalCode', shippingAddress.postalCode);
-    setValue('country', shippingAddress.country);
+    if (shippingAddress) {
+      setValue('fullName', shippingAddress.fullName);
+      setValue('address', shippingAddress.address);
+      setValue('city', shippingAddress.city);
+      setValue('postalCode', shippingAddress.postalCode);
+      setValue('country', shippingAddress.country);
+    }
   }, []);
 
   const submitHandler = ({ fullName, address, city, postalCode, country }) => {
