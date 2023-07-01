@@ -4,4 +4,8 @@ const getError = (err) => {
     : err.message;
 };
 
-export { getError };
+onError = async (err, res, res, next) => {
+  await db.disconnect();
+  res.status(500).send({ message: err.toString() });
+};
+export { getError, onError };
