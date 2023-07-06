@@ -89,7 +89,7 @@ function PlaceOrder() {
 
   return (
     <Layout title="Review Order">
-      <CheckoutWizard activeStep={3}></CheckoutWizard>
+      <CheckoutWizard activeStep={4}></CheckoutWizard>
       <Typography component="h1" variant="h1">
         Place Order
       </Typography>

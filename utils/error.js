@@ -4,7 +4,7 @@ const getError = (err) => {
     : err.message;
 };
 
-onError = async (err, res, res, next) => {
+const onError = async (err, res, next) => {
   await db.disconnect();
   res.status(500).send({ message: err.toString() });
 };
