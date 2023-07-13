@@ -53,12 +53,11 @@ function reducer(state, action) {
 function Order({ params }) {
   // id=[id]
   const orderId = params.id;
+  const { userInfo } = state;
+  const { state } = useContext(Store);
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const router = useRouter();
-  const { state } = useContext(Store);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-  const { userInfo } = state;
 
   const [{ loading, error, order, successPay }, dispatch] = useReducer(
     reducer,
@@ -89,7 +88,7 @@ function Order({ params }) {
     }
     const fetchOrder = async () => {
       try {
-        dispatch({ type: 'FETCH_ORDER' });
+        dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/orders/${orderId}`, {
           headers: {
             authorization: `Bearer ${userInfo.token}`,

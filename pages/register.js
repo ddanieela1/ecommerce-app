@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
+import { getError } from '@/utils/error';
 
 export default function Register() {
   // const [name, setName] = useState('');
@@ -56,7 +57,7 @@ export default function Register() {
 
       console.log(userInfo);
     } catch (error) {
-      enqueueSnackbar(error.response?.data?.message || 'An error occurred', {
+      enqueueSnackbar(getError(err), {
         variant: 'error',
       });
     }
@@ -190,6 +191,23 @@ export default function Register() {
                     {...field}
                   />
                 )}
+              />
+
+              <TextField
+                align="center"
+                variant="filled"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                inputprops={{ type: 'confirmPassword' }}
+                helpertext={
+                  errors.password
+                    ? errors.password.type === 'minLength'
+                      ? 'Password length meets requirements'
+                      : 'Password required'
+                    : ''
+                }
+                {...field}
               />
             </Grid>
             <Grid item xs={12}>

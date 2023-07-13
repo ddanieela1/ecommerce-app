@@ -32,6 +32,7 @@ import Cookies from 'js-cookie';
 import Layout from '@/components/Layout';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
+import { getError } from '@/utils/error';
 
 export default function SignIn() {
   const {
@@ -75,11 +76,7 @@ export default function SignIn() {
       Cookies.set('userInfo', data);
       router.push(redirect || '/');
     } catch (error) {
-      enqueueSnackbar(
-        error.response?.data?.message || 'An error occurred',
-
-        { variant: error }
-      );
+      enqueueSnackbar(getError(err), { variant: error });
 
       console.log(email, password);
       console.log(error);
