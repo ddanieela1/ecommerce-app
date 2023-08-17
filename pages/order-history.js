@@ -10,14 +10,17 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  Button,
 } from '@mui/material';
+import { TableHead } from '@mui/material';
+import React, { useEffect, useContext, useReducer } from 'react';
+import NextLink from 'next/link';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
-import Layout from '../components/Layout';
-import React, { useEffect, useContext, useReducer } from 'react';
-import { getError } from '@/utils/error';
 import { useRouter } from 'next/router';
 import { Store } from '../utils/Store';
+import { getError } from '../utils/error';
+import Layout from '../components/Layout';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -33,8 +36,8 @@ function reducer(state, action) {
   }
 }
 
-function orderHistory() {
-  const { state } = useContext('Store');
+function OrderHistory() {
+  const { state } = useContext(Store);
   const { userInfo } = state;
   const router = useRouter();
 
@@ -45,19 +48,31 @@ function orderHistory() {
   });
 
   useEffect(() => {
+    console.log('Use effect for OrderHistory component');
     if (!userInfo) {
       router.push('/signin');
     }
+
     const fetchOrders = async () => {
       try {
-        dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/orders/history`, {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        });
+        console.log('Data from API:', data);
+        dispatch({ type: 'FETCH_REQUEST', payload: data });
+
+        console.log('Fetching orders...');
+        console.log('Authorization token:', userInfo.token);
+        console.log('User ID:', userInfo._id);
+        const { data } = await axios.get(
+          `/api/orders/history?_id=${userInfo._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${userInfo.token}`,
+            },
+          }
+        );
+        console.log('API Response:', data);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch {
+      } catch (err) {
+        console.error('API Error:', err);
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
@@ -100,6 +115,8 @@ function orderHistory() {
                   <CircularProgress />
                 ) : error ? (
                   <Typography>{error}</Typography>
+                ) : orders.length === 0 ? (
+                  <Typography>No orders found</Typography>
                 ) : (
                   <TableContainer>
                     <TableHead>
@@ -113,8 +130,8 @@ function orderHistory() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {orders.map((order) => {
-                        <TableRow key={order.id}>
+                      {orders.map((order) => (
+                        <TableRow key={order._id}>
                           <TableCell>{order._id.substring(20, 24)}</TableCell>
                           <TableCell>{order.createdAt}</TableCell>
                           <TableCell>${order.totalPrice}</TableCell>
@@ -129,8 +146,8 @@ function orderHistory() {
                               <Button variant="contained">Details</Button>
                             </NextLink>
                           </TableCell>
-                        </TableRow>;
-                      })}
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </TableContainer>
                 )}
@@ -143,4 +160,4 @@ function orderHistory() {
   );
 }
 
-export default dynamic(() => Promise.resolve(orderHistory), { ssr: false });
+export default dynamic(() => Promise.resolve(OrderHistory), { ssr: false });

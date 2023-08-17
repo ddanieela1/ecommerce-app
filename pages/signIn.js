@@ -28,8 +28,8 @@ import { useState, useContext } from 'react';
 import { SettingsSystemDaydreamOutlined } from '@mui/icons-material';
 
 import Cookies from 'js-cookie';
-// import { USER_SIGNIN } from '../utils/Store.js';
-import Layout from '@/components/Layout';
+import { USER_SIGNIN } from '../utils/Store.js';
+import Layout from '../components/Layout';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { getError } from '@/utils/error';
@@ -44,9 +44,9 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const { state, dispatch } = useContext(Store);
-  const { userInfo } = state;
   const router = useRouter();
   const { redirect } = router.query;
+  const { userInfo } = state;
 
   useEffect(() => {
     if (userInfo) {
@@ -63,7 +63,7 @@ export default function SignIn() {
     closeSnackbar();
     // check user & pass match
     try {
-      // const token = Cookies.get('userInfo')?.token;
+      const token = Cookies.get('userInfo')?.token;
       const { data } = await axios.post(
         'api/users/signin',
 
@@ -72,14 +72,14 @@ export default function SignIn() {
           password,
         }
       );
-
+      dispatch({ type: 'USER_SIGNIN', payload: data });
       Cookies.set('userInfo', data);
       router.push(redirect || '/');
-    } catch (error) {
+    } catch (err) {
       enqueueSnackbar(getError(err), { variant: error });
 
       console.log(email, password);
-      console.log(error);
+      console.log(err);
     }
   };
 
@@ -129,10 +129,10 @@ export default function SignIn() {
               pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
             }}
             render={({ field }) => (
-              <TextField
-                variant="outlined"
+              <OutlinedInput
+                placeholder="Enter email"
                 id="email"
-                label="Email"
+                name="email"
                 inputProps={{ type: 'email' }}
                 error={Boolean(errors.email)}
                 helpertext={

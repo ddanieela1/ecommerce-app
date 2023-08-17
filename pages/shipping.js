@@ -15,28 +15,34 @@ export default function Shipping() {
     control,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm();
 
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
     userInfo,
     cart: { shippingAddress },
   } = state;
-  const router = useRouter();
+
   const { redirect } = router.query;
 
   useEffect(() => {
     if (!userInfo) {
       router.push('/signin?redirect=/shipping');
     }
-    if (shippingAddress) {
-      setValue('fullName', shippingAddress.fullName);
-      setValue('address', shippingAddress.address);
-      setValue('city', shippingAddress.city);
-      setValue('postalCode', shippingAddress.postalCode);
-      setValue('country', shippingAddress.country);
+    try {
+      if (shippingAddress) {
+        setValue('fullName', shippingAddress.fullName);
+        setValue('address', shippingAddress.address);
+        setValue('city', shippingAddress.city);
+        setValue('postalCode', shippingAddress.postalCode);
+        setValue('country', shippingAddress.country);
+      }
+    } catch (error) {
+      console.error('Error saving shipping address', error);
     }
-  }, []);
+  }, [userInfo, shippingAddress]);
 
   const submitHandler = ({ fullName, address, city, postalCode, country }) => {
     dispatch({
@@ -50,7 +56,7 @@ export default function Shipping() {
       postalCode,
       country,
     });
-    router.push(redirect || '/payment');
+    router.push('/payment');
   };
 
   const formStyle = {
@@ -67,11 +73,10 @@ export default function Shipping() {
     <Layout title="Shipping">
       <CheckoutWizard activeStep={1} />
       <form style={formStyle} onSubmit={handleSubmit(submitHandler)}>
-        <div>
-          <Typography component="h1" variant="h3">
-            Shipping
-          </Typography>
-        </div>
+        <Typography component="h1" variant="h3">
+          Shipping
+        </Typography>
+
         <List>
           <ListItem>
             <Controller
@@ -80,7 +85,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                minLength: 2,
               }}
               render={({ field }) => (
                 <TextField
@@ -91,15 +96,15 @@ export default function Shipping() {
                   error={Boolean(errors.fullName)}
                   helpertext={
                     errors.fullName
-                      ? errors.fullName.type === 'pattern'
+                      ? errors.fullName.type === 'minLength'
                         ? 'Full Name is not valid'
                         : 'Full Name required'
                       : ''
                   }
                   {...field}
-                />
+                ></TextField>
               )}
-            />
+            ></Controller>
           </ListItem>
 
           <ListItem>
@@ -109,7 +114,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                minLength: 2,
               }}
               render={({ field }) => (
                 <TextField
@@ -117,7 +122,7 @@ export default function Shipping() {
                   variant="outlined"
                   id="address"
                   label="Address"
-                  inputProps={{ type: 'address' }}
+                  // inputProps={{ type: 'address' }}
                   error={Boolean(errors.address)}
                   helpertext={
                     errors.address
@@ -127,9 +132,9 @@ export default function Shipping() {
                       : ''
                   }
                   {...field}
-                />
+                ></TextField>
               )}
-            />
+            ></Controller>
           </ListItem>
 
           <ListItem>
@@ -139,7 +144,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                minLength: 2,
               }}
               render={({ field }) => (
                 <TextField
@@ -157,9 +162,9 @@ export default function Shipping() {
                       : ''
                   }
                   {...field}
-                />
+                ></TextField>
               )}
-            />
+            ></Controller>
           </ListItem>
 
           <ListItem>
@@ -169,7 +174,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                minLength: 2,
               }}
               render={({ field }) => (
                 <TextField
@@ -177,7 +182,7 @@ export default function Shipping() {
                   variant="outlined"
                   id="postalCode"
                   label="Postal Code"
-                  inputProps={{ type: 'postalCode' }}
+                  // inputProps={{ type: 'postalCode' }}
                   error={Boolean(errors.postalCode)}
                   helpertext={
                     errors.postalCode
@@ -187,9 +192,9 @@ export default function Shipping() {
                       : ''
                   }
                   {...field}
-                />
+                ></TextField>
               )}
-            />
+            ></Controller>
           </ListItem>
           <ListItem>
             <Controller
@@ -198,7 +203,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                minLength: 2,
               }}
               render={({ field }) => (
                 <TextField
@@ -206,7 +211,7 @@ export default function Shipping() {
                   variant="outlined"
                   id="country"
                   label="Country"
-                  inputProps={{ type: 'country' }}
+                  // inputProps={{ type: 'country' }}
                   error={Boolean(errors.country)}
                   helpertext={
                     errors.country
@@ -216,9 +221,9 @@ export default function Shipping() {
                       : ''
                   }
                   {...field}
-                />
+                ></TextField>
               )}
-            />
+            ></Controller>
           </ListItem>
           <div>
             <Button

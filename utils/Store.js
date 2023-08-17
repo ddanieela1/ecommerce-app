@@ -3,6 +3,35 @@ import { createContext, useReducer } from 'react';
 
 export const Store = createContext('');
 
+const userInfoCookie = Cookies.get('userInfo');
+let userInfo;
+
+try {
+  userInfo = userInfoCookie ? JSON.parse(userInfoCookie) : null;
+} catch (error) {
+  console.error("Error parsing 'userInfo' cookie:", error);
+  userInfo = null;
+}
+
+// const shippingAddressCookie = Cookies.get('shippingAddressCookie');
+// let shippingAddress;
+
+// shippingAddress = Cookies.get('shippingAddressCookie')
+//   ? JSON.parse(shippingAddressCookie)
+//   : null;
+
+const shippingAddressCookie = Cookies.get('shippingAddressCookie');
+let shippingAddress;
+
+try {
+  shippingAddress = shippingAddressCookie
+    ? JSON.parse(shippingAddressCookie)
+    : null;
+} catch (error) {
+  console.error("Error parsing 'saveShippingAddress' cookie:", error);
+  shippingAddress = null;
+}
+
 const initialState = {
   cart: {
     cartItems: Cookies.get('cartItems')
@@ -12,17 +41,27 @@ const initialState = {
   paymentMethod: Cookies.get('paymentMethod')
     ? Cookies.get('paymentMethod')
     : {},
-  saveShippingAddress: Cookies.get('saveShippingAddress')
-    ? JSON.parse(Cookies.get('saveShippingAddress'))
-    : '',
+  // saveShippingAddress: Cookies.get('saveShippingAddress')
+  //   ? JSON.parse(Cookies.get('saveShippingAddress'))
+  //   : '',
 
-  userInfo: {
-    cartItems:
-      Cookies.get('userInfo') ||
-      // ? JSON.parse(Cookies.get('userInfo'))
-      null,
-  },
+  userInfo: userInfo,
+
+  shippingAddress: shippingAddress,
+  // userInfo: Cookies.get('userInfo')
+  //   ? JSON.parse(Cookies.get('userInfo'))
+  //   : null,
 };
+
+// function parseUserData() {
+//   // userInfo: Cookies.get('userInfo')
+//   try {
+//     const jsonData = JSON.parse(Cookies.get('userInfo')) || null;
+//     console.log(jsonData);
+//   } catch (error) {
+//     console.error('Error parsing JSON:', error);
+//   }
+// }
 
 function reducer(state, action) {
   switch (action.type) {
@@ -72,7 +111,7 @@ function reducer(state, action) {
     case 'SAVE_SHIPPING_ADDRESS': {
       return {
         ...state,
-        cart: { ...state.cart, saveShippingAddress: action.payload },
+        cart: { ...state.cart, shippingAddress: action.payload },
       };
     }
     case 'SAVE_PAYMENT_METHOD': {
@@ -83,21 +122,6 @@ function reducer(state, action) {
     }
     default:
       return state;
-
-    // case 'ADD_DUPLICATE': {
-    //   const addDuplicate = action.payload;
-    //   const duplicateItem = state.cart.cartItems.find(
-    //     (item) => item._id === itemExists
-    //   );
-
-    //   const cartItems = duplicateItem
-    //     ? state.cart.cartItems.map((item) =>
-    //         item._id === duplicateItem._id ? addDuplicate : item
-    //       )
-    //     : [...state.cart.cartItems, addDuplicate];
-    //   Cookies.set('cartItems', JSON.stringify(cartItems));
-    //   return { ...state, cart: { ...state.cart, cartItems } };
-    // }
   }
 }
 

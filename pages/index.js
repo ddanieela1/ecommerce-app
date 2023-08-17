@@ -12,7 +12,7 @@ import Layout from '../components/Layout';
 
 import { useContext } from 'react';
 import db from '../utils/db';
-import Product from '@/models/Product';
+import Product from '../models/Product';
 import { useRouter } from 'next/router';
 import { Store } from '../utils/Store';
 
@@ -48,8 +48,10 @@ export default function Home(props) {
                       component="img"
                       image={product.image}
                       title={product.name}
+                      alt={product.name}
+                      sx={{ height: 140 }}
                     >
-                      {/* <img src="product.image" /> */}
+                      {/* <img src={product.image}></img> */}
                     </CardMedia>
                     <CardContent>
                       <Typography>{product.name}</Typography>

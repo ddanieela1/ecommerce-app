@@ -1,11 +1,14 @@
+import db from '../utils/db';
+
 const getError = (err) => {
-  err.response && err.response.data && err.response.data.message
+  return err.response && err.response.data && err.response.data.message
     ? err.response.data.message
     : err.message;
 };
 
-const onError = async (err, res, next) => {
+const onError = async (err, req, res, next) => {
   await db.disconnect();
-  res.status(500).send({ message: err.toString() });
+  res.status(500).send({ message: getError(err) });
 };
+
 export { getError, onError };

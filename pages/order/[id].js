@@ -52,12 +52,16 @@ function reducer(state, action) {
 // line 343 -344
 function Order({ params }) {
   // id=[id]
-  const orderId = params.id;
-  const { userInfo } = state;
-  const { state } = useContext(Store);
+  const orderId = params?.id;
+  if (!orderId) {
+    enqueueSnackbar('Invalid order id, orderid not found', {
+      variant: 'error',
+    });
+  }
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const router = useRouter();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { state } = useContext(Store);
+  const { userInfo } = state;
 
   const [{ loading, error, order, successPay }, dispatch] = useReducer(
     reducer,
@@ -76,6 +80,7 @@ function Order({ params }) {
     taxPrice,
     shippingPrice,
     totalPrice,
+    updatedOrder,
     isPaid,
     paidAt,
     isDelivered,
@@ -95,8 +100,8 @@ function Order({ params }) {
           },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch {
-        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+      } catch (error) {
+        dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
       }
     };
     if (!order._id || successPay || (order._id && order._id !== orderId)) {
@@ -125,7 +130,94 @@ function Order({ params }) {
       };
       loadPaypalScript();
     }
-  }, [order, successPay]);
+  }, [successPay]);
+
+  // const fetchOrderAndPaypal = async () => {
+  //   try {
+  //     dispatch({ type: 'FETCH_REQUEST' });
+  //     const { data } = await axios.get(`/api/orders/${orderId}`, {
+  //       headers: {
+  //         authorization: `Bearer ${userInfo.token}`,
+  //       },
+  //     });
+  //     console.log('Order is paid', data.isPaid);
+  //     dispatch({ type: 'FETCH_SUCCESS', payload: data });
+
+  //     if (!order._id || successPay || (order._id && order._id !== orderId)) {
+  //       if (successPay) {
+  //         dispatch({ type: 'PAY_RESET' });
+  //       }
+  //     } else {
+  //       const { data: clientId } = await axios.get('/api/keys/paypal', {
+  //         headers: {
+  //           authorization: `Bearer ${userInfo.token}`,
+  //         },
+  //       });
+  //       paypalDispatch({
+  //         type: 'resetOptions',
+  //         value: {
+  //           'client-id': clientId,
+  //           currency: ' USD',
+  //         },
+  //       });
+
+  //       paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+  //     }
+  //   } catch (error) {
+  //     dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
+  //   }
+  // };
+
+  // // Call the fetch function when component mounts
+  // useEffect(() => {
+  //   fetchOrderAndPaypal();
+  // }, [order, successPay]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const { data } = await axios.get(`/api/orders/${orderId}`, {
+  //         headers: {
+  //           authorization: `Bearer ${userInfo.token}`,
+  //         },
+  //       });
+
+  //       const updatedOrder = data;
+
+  //       if (
+  //         !updatedOrder._id ||
+  //         successPay ||
+  //         (updatedOrder._id && updatedOrder._id !== orderId)
+  //       ) {
+  //         if (successPay) {
+  //           dispatch({ type: 'PAY_RESET' });
+  //         }
+  //       } else {
+  //         const { data: clientId } = await axios.get('/api/keys/paypal', {
+  //           headers: {
+  //             authorization: `Bearer ${userInfo.token}`,
+  //           },
+  //         });
+  //         paypalDispatch({
+  //           type: 'resetOptions',
+  //           value: {
+  //             'client-id': clientId,
+  //             currency: ' USD',
+  //           },
+  //         });
+  //         paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+  //       }
+
+  //       dispatch({ type: 'FETCH_SUCCESS', payload: updatedOrder });
+  //     } catch (error) {
+  //       dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [order, successPay]);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   function createOrder(data, actions) {
     return actions.order
@@ -140,12 +232,13 @@ function Order({ params }) {
         return orderID;
       });
   }
+
   //  update to paid on be
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
         dispatch({ type: 'PAY_REQUEST' });
-        // update state in be
+        // uextract updated order from response
         const { data } = await axios.put(
           `/api/orders/${order._id}/pay`,
           details,
@@ -153,9 +246,12 @@ function Order({ params }) {
             headers: { authorization: `Bearer ${userInfo.token}` },
           }
         );
+        console.log('Order is paid', order.isPaid);
+
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         enqueueSnackbar('Order is paid', { variant: 'success' });
       } catch (err) {
+        console.log('pay error', err);
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         enqueueSnackbar(getError(err), { variant: 'error' });
       }
@@ -168,7 +264,7 @@ function Order({ params }) {
 
   return (
     <Layout title={`Order ${orderId}`}>
-      <Typography component="h1" variant="h1">
+      <Typography component="h5" variant="h5">
         Order {orderId}
       </Typography>
       {loading ? (
@@ -196,12 +292,12 @@ function Order({ params }) {
             <Card>
               <List>
                 <ListItem>
-                  <Typography component="h2" variant="h2">
+                  <Typography component="h5" variant="h5">
                     Payment Method
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  Status: {isPaid ? `Paid at ${paidAt}` : 'not paid'}
+                  Status: {order.isPaid ? `Paid at ${paidAt}` : 'not paid'}
                 </ListItem>
                 <ListItem>
                   <Typography>{paymentMethod}</Typography>
@@ -211,7 +307,7 @@ function Order({ params }) {
             <Card>
               <List>
                 <ListItem>
-                  <Typography component="h2" variant="h2">
+                  <Typography component="h5" variant="h5">
                     Order Items
                   </Typography>
                 </ListItem>
@@ -229,12 +325,12 @@ function Order({ params }) {
                       </TableHead>
 
                       <TableBody>
-                        {orderItems.map((item) => {
+                        {orderItems.map((item) => (
                           <TableRow key={item._id}>
                             <TableCell>
                               <NextLink href={`/product/${item.slug}`} passHref>
                                 <Link>
-                                  <Image
+                                  <img
                                     src={item.image}
                                     alt={item.name}
                                     width={50}
@@ -256,8 +352,8 @@ function Order({ params }) {
                             <TableCell align="right">
                               <Typography>${item.price}</Typography>
                             </TableCell>
-                          </TableRow>;
-                        })}
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -269,7 +365,7 @@ function Order({ params }) {
             <Card>
               <List>
                 <ListItem>
-                  <Typography variant="h2">Order Summary</Typography>
+                  <Typography variant="h5">Order Summary</Typography>
                 </ListItem>
                 <ListItem>
                   <Grid container>
@@ -306,19 +402,22 @@ function Order({ params }) {
                   </Grid>
                 </ListItem>
                 <ListItem>
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <Typography>
-                        <strong>Total:</strong>
-                      </Typography>
+                  <ListItem>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <Typography>
+                          <strong>Total:</strong>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography>
+                          <strong>${totalPrice}</strong>
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <Typography>
-                        <strong>${totalPrice}</strong>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  {!isPaid && (
+                  </ListItem>
+
+                  {!order.isPaid && (
                     <ListItem>
                       {isPending ? (
                         <CircularProgress />
@@ -347,4 +446,4 @@ function Order({ params }) {
 export async function getServerSideProps({ params }) {
   return { props: { params } };
 }
-export default dynamic(() => Promise.resolve(Order), { ssr: false });
+export default dynamic(() => Promise.resolve(Order));

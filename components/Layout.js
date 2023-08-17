@@ -12,43 +12,44 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import NextLink from 'next/link';
 import Badge from '@mui/material/Badge';
-import { Menu, MenuItem, styled } from '@mui/material';
+import { CssBaseline, Menu, MenuItem, styled } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import { useRouter } from 'next/router';
 import { Store } from '../utils/Store';
 import { USER_LOGOUT, USER_SIGNIN } from '../utils/Store';
+import MenuIcon from '@material-ui/icons/Menu';
 
-const NavLink = styled(Typography)(({ theme }) => ({
-  fontSize: '14px',
-  color: '#4F5361',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  '&:hover': {
-    color: '#fff',
-  },
-}));
+// const NavLink = styled(Typography)(({ theme }) => ({
+//   fontSize: '14px',
+//   color: '#4F5361',
+//   fontWeight: 'bold',
+//   cursor: 'pointer',
+//   '&:hover': {
+//     color: '#fff',
+//   },
+// }));
 
-const NavbarLinksBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: theme.spacing(6),
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
-  },
-}));
+// const NavbarLinksBox = styled(Box)(({ theme }) => ({
+//   display: 'flex',
+//   alignItems: 'center',
+//   justifyContent: 'center',
+//   gap: theme.spacing(6),
+//   [theme.breakpoints.down('md')]: {
+//     display: 'none',
+//   },
+// }));
 
-const NavBarContainer = styled(Container)(({ theme }) => ({
-  display: 'flex',
-  backgroundColor: 'transparent',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: theme.spacing(5),
-  [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(2),
-  },
-}));
+// const NavBarContainer = styled(Container)(({ theme }) => ({
+//   display: 'flex',
+//   backgroundColor: 'black',
+//   alignItems: 'center',
+//   justifyContent: 'space-between',
+//   padding: theme.spacing(5),
+//   [theme.breakpoints.down('md')]: {
+//     padding: theme.spacing(2),
+//   },
+// }));
 
 // const navBarButton = styled(Button)(({ theme }) => ({
 //   color: 'white',
@@ -56,10 +57,8 @@ const NavBarContainer = styled(Container)(({ theme }) => ({
 // }));
 
 const navBarButton = {
-  color: 'black',
-  // backgroundColor: 'white',
+  color: '#ffffff',
   textTransform: 'initial',
-  backgroundColor: 'transparent',
 };
 
 export default function Layout({ children }) {
@@ -92,68 +91,81 @@ export default function Layout({ children }) {
       <Head>
         <title>{title ? `${title}-Bingo` : 'Bingo'}</title>
       </Head>
-      <NavBarContainer>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '2.5rem',
-          }}
-        >
-          <NavbarLinksBox>
-            <NavLink variant="body1">
-              <Typography>Bingo</Typography>
-            </NavLink>
 
-            <NavLink variant="body2">
-              <NextLink href="/featured" passHref>
-                Featured Products
-              </NextLink>
-            </NavLink>
-
-            <NavLink variant="body2">
-              <NextLink href="/best-sellers" passHref>
-                Best Sellers
-              </NextLink>
-            </NavLink>
-            <NavLink variant="body2">
-              <NextLink href="/best-sellers" passHref>
-                New Arrivals
-              </NextLink>
-            </NavLink>
-          </NavbarLinksBox>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1rem',
-          }}
-        >
-          <NavLink variant="body1">
-            <NextLink href="/cart" passHref>
-              {cart.cartItems.length > 0 ? (
-                <Badge color="secondary" badgeContent={cart.cartItems.length}>
-                  Cart
-                </Badge>
-              ) : (
-                'Cart'
-              )}
+      <CssBaseline />
+      <AppBar
+        sx={{
+          backgroundColor: 'green',
+          '& a': {
+            color: '#ffffff',
+            marginLeft: 10,
+          },
+        }}
+      >
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          {/* <NavBarContainer> */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              // justifyContent: 'center',
+              // gap: '2.5rem',
+            }}
+          >
+            <MenuIcon />
+            <NextLink href="/" passHref>
+              <Link>
+                <Typography>Bingo</Typography>
+              </Link>
             </NextLink>
-          </NavLink>
 
-          <NavLink>
+            <NextLink href="/featured" passHref>
+              <Link>
+                <Typography>featured</Typography>
+              </Link>
+            </NextLink>
+
+            <NextLink href="/best-sellers" passHref>
+              <Link>
+                <Typography>Best Sellers</Typography>
+              </Link>
+            </NextLink>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1rem',
+            }}
+          >
+            <NextLink href="/cart" passHref>
+              <Link>
+                <Typography component="span">
+                  {cart.cartItems.length > 0 ? (
+                    <Badge
+                      color="secondary"
+                      badgeContent={cart.cartItems.length}
+                    >
+                      Cart
+                    </Badge>
+                  ) : (
+                    'Cart'
+                  )}
+                </Typography>
+              </Link>
+            </NextLink>
+
+            {/* <NavLink> */}
             {userInfo ? (
               <>
                 <Button
                   // sx={{ color: 'white' }}
-                  style={navBarButton}
                   aria-controls="simple-menu"
                   aria-haspopup="true"
                   onClick={signinClickHandler}
+                  style={navBarButton}
                 >
                   {userInfo.name}
                 </Button>
@@ -182,9 +194,11 @@ export default function Layout({ children }) {
                 Sign In
               </NextLink>
             )}
-          </NavLink>
-        </Box>
-      </NavBarContainer>
+            {/* </NavLink> */}
+          </Box>
+          {/* </NavBarContainer> */}
+        </Toolbar>
+      </AppBar>
       <Container>{children}</Container>
 
       <footer>

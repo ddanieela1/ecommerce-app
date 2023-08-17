@@ -19,7 +19,7 @@ import { useSnackbar } from 'notistack';
 export default function Payment() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
-  const { paymentMethod, setPaymentMethod } = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const { state, dispatch } = useContext(Store);
   const {
     cart: { shippingAddress },
@@ -46,7 +46,7 @@ export default function Payment() {
   return (
     <Layout title="Payment">
       <CheckoutWizard activeStep={2}></CheckoutWizard>
-      <form onClick={submitHandler}>
+      <form onSubmit={submitHandler}>
         <Typography>Payment Method</Typography>
         <List>
           <ListItem>
@@ -58,13 +58,13 @@ export default function Payment() {
                 onChange={(e) => {
                   setPaymentMethod(e.target.value);
                 }}
-              ></RadioGroup>
-
-              <FormControlLabel
-                label="PayPal"
-                value="PayPal"
-                control={<Radio />}
-              ></FormControlLabel>
+              >
+                <FormControlLabel
+                  label="PayPal"
+                  value="PayPal"
+                  control={<Radio />}
+                ></FormControlLabel>
+              </RadioGroup>
             </FormControl>
           </ListItem>
 

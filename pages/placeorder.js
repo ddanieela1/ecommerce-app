@@ -28,7 +28,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 
-function PlaceOrder() {
+export default function PlaceOrder() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
@@ -40,7 +40,7 @@ function PlaceOrder() {
   const itemsPrice = round(
     cartItems.reduce((a, c) => a + c.price * c.quantity, 0)
   );
-  const shippingPrice = itemsPrice > 200 ? 0 : 15.0;
+  const shippingPrice = itemsPrice > 200 ? 0 : 15;
   const taxPrice = round(itemsPrice * 0.15);
   const totalPrice = round(itemsPrice + shippingPrice + taxPrice);
 
@@ -64,7 +64,14 @@ function PlaceOrder() {
         'api/orders',
         {
           orderItems: cartItems,
-          shippingAddress,
+          shipping: shippingPrice,
+          shippingAddress: {
+            fullName: shippingAddress.fullName,
+            address: shippingAddress.address,
+            city: shippingAddress.city,
+            postalCode: shippingAddress.postalCode,
+            country: shippingAddress.country,
+          },
           paymentMethod,
           itemsPrice,
           shippingPrice,
@@ -73,17 +80,20 @@ function PlaceOrder() {
         },
         {
           headers: {
-            authorization: `Bearer ${userInfo.token}`,
+            Authorization: `Bearer ${userInfo.token}`,
           },
         }
       );
       dispatch({ type: 'CLEAR_CART' });
       Cookies.remove('cartItems');
       setLoading(false);
-      router.push(`order/${data._id}`);
+      router.push(`/order/${data._id}`);
+      console.log(shippingAddress);
     } catch (err) {
       setLoading(false);
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), {
+        variant: 'error',
+      });
     }
   };
 
@@ -99,11 +109,28 @@ function PlaceOrder() {
           <Card>
             <List>
               <ListItem>
+                <Typography component="h5" variant="h5">
+                  Shipping Address:
+                </Typography>
+              </ListItem>
+
+              <ListItem>
                 {shippingAddress ? (
                   <>
-                    {shippingAddress.fullName},{shippingAddress.address},{''}
-                    {shippingAddress.city},{shippingAddress.postalCode},{''}
-                    {shippingAddress.country}
+                    <Typography
+                      component="div"
+                      style={{ whiteSpace: 'pre-line' }}
+                    >
+                      <p>{shippingAddress.fullName} </p>
+
+                      <p> {shippingAddress.address} </p>
+
+                      <p> {shippingAddress.city}, </p>
+
+                      <p> {shippingAddress.postalCode} </p>
+
+                      <p> {shippingAddress.country} </p>
+                    </Typography>
                   </>
                 ) : (
                   <Typography>No Address added</Typography>
@@ -114,8 +141,8 @@ function PlaceOrder() {
           <Card>
             <List>
               <ListItem>
-                <Typography component="h2" variant="h2">
-                  Payment Method
+                <Typography component="h5" variant="h5">
+                  Payment Method:
                 </Typography>
               </ListItem>
               <ListItem>
@@ -126,8 +153,8 @@ function PlaceOrder() {
           <Card>
             <List>
               <ListItem>
-                <Typography component="h2" variant="h2">
-                  Order Items
+                <Typography component="h5" variant="h5">
+                  Order Items:
                 </Typography>
               </ListItem>
 
@@ -144,25 +171,25 @@ function PlaceOrder() {
                     </TableHead>
 
                     <TableBody>
-                      {cartItems.map((item) => {
+                      {cartItems.map((item) => (
                         <TableRow key={item._id}>
                           <TableCell>
                             <NextLink href={`/product/${item.slug}`} passHref>
-                              <Link>
-                                <Image
-                                  src={item.image}
-                                  alt={item.name}
-                                  width={50}
-                                  height={50}
-                                />
-                              </Link>
+                              {/* <Link> */}
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                width={50}
+                                height={50}
+                              />
+                              {/* </Link> */}
                             </NextLink>
                           </TableCell>
                           <TableCell>
                             <NextLink href={`/product/${item.slug}`} passHref>
-                              <Link>
-                                <Typography>{item.name}</Typography>
-                              </Link>
+                              {/* <Link> */}
+                              <Typography>{item.name}</Typography>
+                              {/* </Link> */}
                             </NextLink>
                           </TableCell>
                           <TableCell align="right">
@@ -171,8 +198,8 @@ function PlaceOrder() {
                           <TableCell align="right">
                             <Typography>${item.price}</Typography>
                           </TableCell>
-                        </TableRow>;
-                      })}
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -184,7 +211,7 @@ function PlaceOrder() {
           <Card>
             <List>
               <ListItem>
-                <Typography variant="h2">Order Summary</Typography>
+                <Typography variant="h5">Order Summary:</Typography>
               </ListItem>
               <ListItem>
                 <Grid container>
@@ -257,4 +284,4 @@ function PlaceOrder() {
   );
 }
 
-export default dynamic(() => Promise.resolve(PlaceOrder), { ssr: false });
+// export default dynamic(() => Promise.resolve(PlaceOrder), { ssr: false });

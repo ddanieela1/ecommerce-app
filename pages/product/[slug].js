@@ -10,10 +10,10 @@ import Grid from '@mui/material/Grid';
 import Layout from '../../components/Layout';
 
 // models
-import Product from '@/models/Product.js';
+import Product from '../../models/Product';
 
 // files
-import db from '@/utils/db.js';
+import db from '../../utils/db.js';
 import { Store } from '../../utils/Store';
 
 export default function ProductView(props) {
@@ -48,13 +48,13 @@ export default function ProductView(props) {
 
         <Grid container spacing={1}>
           <Grid item md={6} xs={12}>
-            <Image
+            <img
               src={product.image}
               alt={product.name}
               height={640}
               width={640}
-              // layout="responsive"
-            ></Image>
+              layout="responsive"
+            />
           </Grid>
 
           <Grid item md={3} xs={12}>

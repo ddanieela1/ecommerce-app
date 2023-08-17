@@ -1,8 +1,8 @@
 import NextLink from 'next/link';
 import Image from 'next/image';
 import React, { useContext } from 'react';
-import Layout from '@/components/Layout';
-import { Store } from '@/utils/Store';
+import Layout from '../components/Layout';
+import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import {
@@ -80,11 +80,7 @@ export default function CartView() {
                       <TableCell>
                         <NextLink href={`product/${item.slug}`} passHref>
                           <Link>
-                            <Image
-                              src={item.image}
-                              width={50}
-                              height={50}
-                            ></Image>
+                            <img src={item.image} width={50} height={50} />
                           </Link>
                         </NextLink>
                       </TableCell>
