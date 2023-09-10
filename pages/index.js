@@ -139,8 +139,10 @@ export async function getServerSideProps() {
   await db.disconnect();
   return {
     props: {
-      products: products.map(db.convertDocToObj),
-      featuredProducts: featuredProducts.map(db.convertDocToObj),
+      products: JSON.parse(JSON.stringify(products)),
+      featuredProducts: JSON.parse(JSON.stringify(featuredProducts)),
+      // products: products.map(db.convertDocToObj),
+      // featuredProducts: featuredProducts.map(db.convertDocToObj),
     },
   };
 }

@@ -1,14 +1,14 @@
-// import nc from 'next-connect';
-// import bcrypt from 'bcryptjs';
-// import db from '../../../utils/db';
-// import User from '../../../models/User';
-// import { signToken } from '../../../utils/auth';
+import nc from 'next-connect';
+import bcrypt from 'bcryptjs';
+import db from '../../../utils/db';
+import User from '../../../models/User';
+import { signToken } from '../../../utils/auth';
 
-const bcrypt = require('bcryptjs');
-const db = require('../../../utils/db');
-const { User } = require('../../../models/User').default;
-const { signToken } = require('../../../utils/auth');
-const nc = require('next-connect');
+// const bcrypt = require('bcryptjs');
+// const db = require('../../../utils/db');
+// const { User } = require('../../../models/User').default;
+// const { signToken } = require('../../../utils/auth');
+// const nc = require('next-connect');
 
 const handler = nc();
 
@@ -41,7 +41,10 @@ handler.post(async (req, res) => {
     await db.connect();
 
     // search for user in db
+
     const user = await User.findOne({ email: req.body.email });
+    console.log(req.body.email);
+    console.log(user);
     await db.disconnect();
 
     // compare plain text to encrypted text

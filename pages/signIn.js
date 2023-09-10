@@ -76,7 +76,7 @@ export default function SignIn() {
       Cookies.set('userInfo', data);
       router.push(redirect || '/');
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: error });
+      enqueueSnackbar(getError(err), { variant: err });
 
       console.log(email, password);
       console.log(err);
