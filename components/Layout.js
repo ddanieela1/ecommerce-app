@@ -1,4 +1,11 @@
-import React, { title, children, useEffect, useState, useContext } from 'react';
+import React, {
+  title,
+  children,
+  useEffect,
+  useState,
+  useContext,
+  createContext,
+} from 'react';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -36,7 +43,8 @@ import { USER_LOGOUT, USER_SIGNIN } from '../utils/Store';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import { ThemeProvider, createTheme } from '@material-ui/core';
-import { Form } from 'react-hook-form';
+// import useScrollTrigger from 'react-scroll-trigger';
+import { makeStyles } from '@material-ui/core/styles';
 
 const theme = createTheme({
   typography: {
@@ -54,9 +62,16 @@ const theme = createTheme({
 });
 
 const navBarButton = {
-  color: '#ffffff',
+  color: '#009688',
   textTransform: 'initial',
 };
+const pageBody = {
+  body: {
+    color: 'orange',
+    backgroundColor: '#ffeaec',
+  },
+};
+
 export default function Layout({ children }) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
@@ -120,7 +135,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <div>
+    <div style={{ pageBody }}>
       <Head>
         <title>{title ? `${title}-Bingo` : 'Bingo'}</title>
       </Head>
@@ -130,14 +145,20 @@ export default function Layout({ children }) {
         <AppBar
           position="static"
           sx={{
-            backgroundColor: 'green',
+            backgroundColor: '#8d6e63',
             '& a': {
-              color: '#ffffff',
+              color: '#212121',
               marginLeft: 10,
+              width: '100%',
             },
           }}
         >
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Toolbar
+            sx={{
+              justifyContent: 'space-between',
+              borderBottom: '1px solid #212121',
+            }}
+          >
             <Box
               sx={{
                 display: 'flex',
@@ -152,8 +173,8 @@ export default function Layout({ children }) {
                 <MenuIcon />
               </IconButton>
 
-              <NextLink href="/" passHref>
-                <Link>
+              <NextLink style={{ textDecoration: 'none' }} href="/" passHref>
+                <Link style={{ textDecoration: 'none' }}>
                   <Typography sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
                     Bingo
                   </Typography>
@@ -213,14 +234,22 @@ export default function Layout({ children }) {
                 </IconButton>
               </form>
             </div>
-            <NextLink href="/featured" passHref>
-              <Link>
+            <NextLink
+              style={{ textDecoration: 'none' }}
+              href="/featured"
+              passHref
+            >
+              <Link style={{ textDecoration: 'none' }}>
                 <Typography>featured</Typography>
               </Link>
             </NextLink>
 
-            <NextLink href="/best-sellers" passHref>
-              <Link>
+            <NextLink
+              style={{ textDecoration: 'none' }}
+              href="/best-sellers"
+              passHref
+            >
+              <Link style={{ textDecoration: 'none' }}>
                 <Typography>Best Sellers</Typography>
               </Link>
             </NextLink>
@@ -284,16 +313,29 @@ export default function Layout({ children }) {
                   </Menu>
                 </>
               ) : (
-                <NextLink href="/signin" passHref>
+                <NextLink
+                  style={{ textDecoration: 'none' }}
+                  href="/signin"
+                  passHref
+                >
                   Sign In
                 </NextLink>
               )}
             </Box>
           </Toolbar>
         </AppBar>
-        <Container sx={{ minHeight: '80vh' }}>{children}</Container>
 
-        <footer sx={{ marginTop: 10, textAlign: 'center' }}>
+        <div style={pageBody.body}>
+          <Container sx={{ minHeight: '80vh' }}>{children}</Container>
+        </div>
+        <footer
+          sx={{
+            marginTop: 10,
+            textAlign: 'center',
+            backgroundColor: '#7c3157',
+            color: '#7c3157',
+          }}
+        >
           <Typography sx={{ textAlign: 'center' }}>
             All rights reserved. Bingo@2023
           </Typography>

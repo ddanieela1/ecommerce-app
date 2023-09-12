@@ -194,15 +194,11 @@ export default function ProductView(props) {
                       <strong>{review.name}</strong>
                     </Typography>
 
-                    {/* {review.createdAt ? ( */}
                     {review.createdAt && (
                       <Typography>
                         {review.createdAt.substring(0, 10)}
                       </Typography>
                     )}
-                    {/* // ) : (
-                    //   <Typography>...</Typography>
-                    // )} */}
                   </Grid>
                   <Grid>
                     <Rating value={parseInt(review.rating)} readOnly />

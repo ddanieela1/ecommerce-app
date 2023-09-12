@@ -22,7 +22,7 @@ import {
 import ListItem from '@mui/material/ListItem';
 // import List from '@mui/material/List';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import CancelIcon from '@material-ui/icons/Cancel';
 import NextLink from 'next/link';
 import axios from 'axios';
@@ -110,10 +110,11 @@ export default function Search(props) {
     filterSearch({ brand: selectedBrand });
   };
 
-  const sortHandler = (e) => {
-    if (e.target && e.target.value) {
-      filterSearch({ sort: e.target.value });
-    }
+  const sortHandler = (selectedSort) => {
+    // if (e.target && e.target.value) {
+    console.log('Sort Clicked :', selectedSort);
+    filterSearch({ sort: selectedSort });
+    // }
   };
 
   const priceHandler = (selectedPrice) => {
@@ -147,6 +148,21 @@ export default function Search(props) {
   const handleClick = () => {
     setOpen(!open);
   };
+
+  const [openStates, setOpenStates] = useState({
+    categories: false,
+    brands: false,
+    price: false,
+    rating: false,
+    sort: false,
+  });
+
+  const toggleOpenState = (section) => {
+    setOpenStates((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
+  };
   return (
     <Layout title="Search">
       <FormControl fullWidth>
@@ -154,7 +170,9 @@ export default function Search(props) {
           <Grid item md={3}>
             <List style={{ display: 'block' }}>
               <Box fullWidth>
-                <ListItemButton onClick={handleClick}>
+                <ListItemButton
+                  onClick={() => (handleClick, toggleOpenState('sort'))}
+                >
                   <ListItemText
                     style={{ display: 'block' }}
                     primary="Categories"
@@ -282,19 +300,22 @@ export default function Search(props) {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {[
-                      'Featured',
-                      'Price: High to Low',
-                      'Price: High to Low',
-                      'Costumer Reviews',
-                      'Newest Arrivals',
-                    ].map((sort) => (
+                      { label: 'Featured', value: 'featured' },
+                      { label: 'Price: High to Low', value: 'price-desc' },
+                      { label: 'Price: High to Low', value: 'price-asc' },
+                      { label: 'Costumer Reviews', value: 'toprated' },
+                      { label: 'Newest Arrivals', value: 'newest' },
+                    ].map((sortOption) => (
                       <ListItemButton
-                        key={sort}
+                        key={sortOption.value}
                         sx={{ pl: 4, display: 'block' }}
-                        onChange={() => sortHandler(sort)}
+                        onClick={() => sortHandler(sortOption.value)}
                       >
-                        <ListItemText name={sort} value={sort}>
-                          {sort}
+                        <ListItemText
+                          name={sortOption.value}
+                          value={sortOption.value}
+                        >
+                          {sortOption.label}
                         </ListItemText>
 
                         {/* <ListItemText name={sort} value="Lowest">

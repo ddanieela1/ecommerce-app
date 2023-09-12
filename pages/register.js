@@ -207,7 +207,6 @@ export default function Register() {
                       : 'Password required'
                     : ''
                 }
-                {...field}
               />
             </Grid>
             <Grid item xs={12}>
