@@ -1,0 +1,9 @@
+/* nav-bar */
+
+.nav-link {
+    color: #fff;
+    transition: color 0.3s ease
+  }
+  .nav-link:hover {
+    color: #ffeaec
+  }

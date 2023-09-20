@@ -39,7 +39,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 
 const prices = [
   {
@@ -149,30 +149,14 @@ export default function Search(props) {
     setOpen(!open);
   };
 
-  const [openStates, setOpenStates] = useState({
-    categories: false,
-    brands: false,
-    price: false,
-    rating: false,
-    sort: false,
-  });
-
-  const toggleOpenState = (section) => {
-    setOpenStates((prevState) => ({
-      ...prevState,
-      [section]: !prevState[section],
-    }));
-  };
   return (
     <Layout title="Search">
       <FormControl fullWidth>
         <Grid container spacing={1}>
-          <Grid item md={3}>
+          <Grid item md={2}>
             <List style={{ display: 'block' }}>
               <Box fullWidth>
-                <ListItemButton
-                  onClick={() => (handleClick, toggleOpenState('sort'))}
-                >
+                <ListItemButton onClick={() => handleClick()}>
                   <ListItemText
                     style={{ display: 'block' }}
                     primary="Categories"
@@ -184,7 +168,7 @@ export default function Search(props) {
                     {categories &&
                       categories.map((category) => (
                         <ListItemButton
-                          sx={{ pl: 4 }}
+                          sx={{ pl: 4, display: 'block' }}
                           onClick={() => categoryHandler(category)}
                         >
                           <ListItemText
@@ -210,19 +194,26 @@ export default function Search(props) {
                   <List component="div" disablePadding>
                     {brands &&
                       brands.map((brand) => (
-                        <ListItemButton
+                        <div
                           key={brand}
-                          sx={{ pl: 4 }}
-                          onClick={() => brandHandler(brand)}
+                          style={{ display: 'flex', flexDirection: 'column' }}
                         >
-                          <ListItemText
-                            primary={brand}
+                          <ListItemButton
                             key={brand}
-                            value={brand}
+                            sx={{
+                              pl: 4,
+                            }}
+                            onClick={() => brandHandler(brand)}
                           >
-                            {brand}
-                          </ListItemText>
-                        </ListItemButton>
+                            <ListItemText
+                              primary={brand}
+                              key={brand}
+                              value={brand}
+                            >
+                              {brand}
+                            </ListItemText>
+                          </ListItemButton>
+                        </div>
                       ))}
                   </List>
                 </Collapse>
@@ -236,13 +227,17 @@ export default function Search(props) {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {prices.map((priceOption, index) => (
-                      <ListItemButton
-                        key={index}
-                        sx={{ pl: 4 }}
-                        onClick={() => priceHandler(priceOption.value)}
+                      <div
+                        key={brand}
+                        style={{ display: 'flex', flexDirection: 'column' }}
                       >
-                        {priceOption.name}
-                      </ListItemButton>
+                        <ListItemButton
+                          key={index}
+                          onClick={() => priceHandler(priceOption.value)}
+                        >
+                          {priceOption.name}
+                        </ListItemButton>
+                      </div>
                     ))}
                   </List>
                 </Collapse>
@@ -270,6 +265,36 @@ export default function Search(props) {
                 </Collapse>
               </Box>
             </List>
+            <Box fullWidth>
+              <ListItemButton onClick={handleClick}>
+                <ListItemText primary="Sort By" />
+                {open ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {[
+                    { label: 'Featured', value: 'featured' },
+                    { label: 'Price: High to Low', value: 'price-desc' },
+                    { label: 'Price: High to Low', value: 'price-asc' },
+                    { label: 'Costumer Reviews', value: 'toprated' },
+                    { label: 'Newest Arrivals', value: 'newest' },
+                  ].map((sortOption) => (
+                    <ListItemButton
+                      key={sortOption.value}
+                      sx={{ pl: 4, display: 'block' }}
+                      onClick={() => sortHandler(sortOption.value)}
+                    >
+                      <ListItemText
+                        name={sortOption.value}
+                        value={sortOption.value}
+                      >
+                        {sortOption.label}
+                      </ListItemText>
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </Box>
           </Grid>
 
           <Grid item md={9}>
@@ -291,58 +316,17 @@ export default function Search(props) {
                   </Button>
                 ) : null}
               </Grid>
-
-              <Box fullWidth>
-                <ListItemButton onClick={handleClick}>
-                  <ListItemText primary="Sort By" />
-                  {open ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    {[
-                      { label: 'Featured', value: 'featured' },
-                      { label: 'Price: High to Low', value: 'price-desc' },
-                      { label: 'Price: High to Low', value: 'price-asc' },
-                      { label: 'Costumer Reviews', value: 'toprated' },
-                      { label: 'Newest Arrivals', value: 'newest' },
-                    ].map((sortOption) => (
-                      <ListItemButton
-                        key={sortOption.value}
-                        sx={{ pl: 4, display: 'block' }}
-                        onClick={() => sortHandler(sortOption.value)}
-                      >
-                        <ListItemText
-                          name={sortOption.value}
-                          value={sortOption.value}
-                        >
-                          {sortOption.label}
-                        </ListItemText>
-
-                        {/* <ListItemText name={sort} value="Lowest">
-                        Price: Low to High
-                      </ListItemText>
-
-                      <ListItemText name={sort} value="Highest">
-                        Price: High to Low
-                      </ListItemText>
-
-                      <ListItemText name={sort} value="toprated">
-                        Costumer Reviews
-                      </ListItemText>
-
-                      <ListItemText name={sort} value="Newest">
-                        Newest Arrivals
-                      </ListItemText> */}
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Collapse>
-              </Box>
             </Grid>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
+              {/* <Grid item maxWidth={6}> */}
               {products.map((product) => (
-                <Grid item md={4} key={product.name}>
+                <Grid
+                  item
+                  md={4}
+                  key={product.name}
+                  sx={{ marginBottom: '20px', marginTop: '20px' }}
+                >
                   {/* <ProductItem
                   product={product}
                   addToCartHandler={addToCartHandler}
@@ -377,11 +361,14 @@ export default function Search(props) {
                   </Card>
                 </Grid>
               ))}
+              {/* </Grid> */}
             </Grid>
+
             <Pagination
               defaultPage={parseInt(query.page || '1')}
               count={pages}
               onChange={pageHandler}
+              sx={{ marginTop: '20px' }}
             ></Pagination>
           </Grid>
         </Grid>

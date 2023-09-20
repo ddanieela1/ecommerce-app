@@ -24,6 +24,7 @@ import {
   Card,
   List,
   CircularProgress,
+  Box,
 } from '@mui/material';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { get } from 'mongoose';
@@ -264,7 +265,7 @@ function Order({ params }) {
 
   return (
     <Layout title={`Order ${orderId}`}>
-      <Typography component="h5" variant="h5">
+      <Typography component="h5" variant="h5" sx={{ margin: '20px' }}>
         Order {orderId}
       </Typography>
       {loading ? (
@@ -274,7 +275,7 @@ function Order({ params }) {
       ) : (
         <Grid container spacing={1}>
           <Grid item md={9} xs={12}>
-            <Card>
+            <Card sx={{ margin: '20px' }}>
               <List>
                 <ListItem>
                   {shippingAddress.fullName},{shippingAddress.address},{''}
@@ -289,7 +290,7 @@ function Order({ params }) {
                 </ListItem>
               </List>
             </Card>
-            <Card>
+            <Card sx={{ margin: '20px' }}>
               <List>
                 <ListItem>
                   <Typography component="h5" variant="h5">
@@ -304,7 +305,7 @@ function Order({ params }) {
                 </ListItem>
               </List>
             </Card>
-            <Card>
+            <Card sx={{ margin: '20px' }}>
               <List>
                 <ListItem>
                   <Typography component="h5" variant="h5">
@@ -362,7 +363,7 @@ function Order({ params }) {
             </Card>
           </Grid>
           <Grid md={3} xs={12}>
-            <Card>
+            <Card sx={{ margin: '20px', maxWidth: '900px', padding: '20px' }}>
               <List>
                 <ListItem>
                   <Typography variant="h5">Order Summary</Typography>
@@ -393,46 +394,47 @@ function Order({ params }) {
                       <Typography>Shipping:</Typography>
                     </Grid>
                   </Grid>
-                </ListItem>
-                <ListItem>
                   <Grid container>
                     <Grid item xs={6}>
                       <Typography>${shippingPrice}</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
+                {/* <ListItem>
+                </ListItem> */}
+
                 <ListItem>
-                  <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>
+                        <strong>Total:</strong>
+                      </Typography>
+                    </Grid>
                     <Grid container>
-                      <Grid item xs={6}>
-                        <Typography>
-                          <strong>Total:</strong>
-                        </Typography>
-                      </Grid>
                       <Grid item xs={6}>
                         <Typography>
                           <strong>${totalPrice}</strong>
                         </Typography>
                       </Grid>
                     </Grid>
-                  </ListItem>
-
-                  {!order.isPaid && (
-                    <ListItem>
-                      {isPending ? (
-                        <CircularProgress />
-                      ) : (
-                        <div>
-                          <PayPalButtons
-                            createOrder={createOrder}
-                            onApprove={onApprove}
-                            onError={onError}
-                          ></PayPalButtons>
-                        </div>
-                      )}
-                    </ListItem>
-                  )}
+                  </Grid>
                 </ListItem>
+
+                {!order.isPaid && (
+                  <ListItem>
+                    {isPending ? (
+                      <CircularProgress />
+                    ) : (
+                      <div>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                          onError={onError}
+                        ></PayPalButtons>
+                      </div>
+                    )}
+                  </ListItem>
+                )}
               </List>
             </Card>
           </Grid>

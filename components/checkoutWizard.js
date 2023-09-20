@@ -4,6 +4,7 @@ import React from 'react';
 export default function CheckoutWizard({ activeStep = 0 }) {
   const stepperStyle = {
     backgroundColor: 'transparent',
+    margin: '20px',
   };
 
   return (

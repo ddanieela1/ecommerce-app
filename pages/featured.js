@@ -1,4 +1,4 @@
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import React from 'react';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -24,74 +24,26 @@ import { Carousel } from 'react-responsive-carousel';
 import Box from '@mui/material/Box';
 import { users, products } from '../utils/data';
 
-// import pen_set from '../public/images/pen_set.jpg';
+const addToCartHandler = async (product) => {
+  const itemExists = state.cart.cartItems.find((p) => p._id === product._id);
+  const quantity = itemExists ? itemExists.quantity + 1 : 1;
 
-// const carouselContainer = {
-//   marginBottom: '80px',
-//   backgroundColor: '#ffffff',
-// };
+  const { data } = await axios.get(`/api/products/${product._id}`);
+  if (data.inStock < quantity) {
+    window.alert('Product out of stock');
+    return;
+  }
+  dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity } });
+  router.push('/cart');
+};
 
-const CarouselContainer = styled('div')({
-  marginTop: '20px',
-  backgroundColor: '#ffffff',
-});
-
-export default function Home(props) {
-  const router = useRouter();
-  const { products, featuredProducts } = props;
-  const { state, dispatch } = useContext(Store);
-  const [dataLoaded, setDataLoaded] = useState(false);
-
-  useEffect(() => {
-    if (featuredProducts.length > 0) {
-      setDataLoaded(true);
-    }
-  }, [featuredProducts]);
-
-  const addToCartHandler = async (product) => {
-    const itemExists = state.cart.cartItems.find((p) => p._id === product._id);
-    const quantity = itemExists ? itemExists.quantity + 1 : 1;
-
-    const { data } = await axios.get(`/api/products/${product._id}`);
-    if (data.inStock < quantity) {
-      window.alert('Product out of stock');
-      return;
-    }
-    dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity } });
-    router.push('/cart');
-  };
-
-  console.log('featuredProducts', featuredProducts);
-  console.log('featuredProducts length', featuredProducts.length);
+export default function Featured() {
   return (
     <Layout>
-      <CarouselContainer style={{ margin: '20px 0' }}>
-        {dataLoaded ? (
-          <Carousel showThumbs={false} autoPlay>
-            {featuredProducts.map((product) => {
-              console.log('featuredProducts:', product);
-              return (
-                <div>
-                  <NextLink href={`/product/${product.slug}`}>
-                    <Image
-                      src={product.banner}
-                      alt={product.name}
-                      width={300}
-                      height={300}
-                      loading="lazy"
-                      responsive
-                      // style={{ height: 'auto' }}
-                    />
-                  </NextLink>
-                </div>
-              );
-            })}
-          </Carousel>
-        ) : (
-          <p>Loading ...</p>
-        )}
-      </CarouselContainer>
-      {/* <h1>Products</h1> */}
+      <Box style={{ margin: '20px' }}>
+        <Typography variant="h6">Featured Products</Typography>
+      </Box>
+
       <Grid container spacing={3}>
         {products.map((product) => (
           <Grid item md={4} key={product.name}>
@@ -131,19 +83,16 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps() {
-  console.log('Fetching products...');
+  console.log('Fetching featured products...');
   await db.connect();
-  const products = await Product.find({}).lean();
+
   const featuredProducts = await Product.find({ isFeatured: true }).lean();
-  console.log('Products:', products);
+
   console.log('Featured Products:', featuredProducts);
   await db.disconnect();
   return {
     props: {
-      products: JSON.parse(JSON.stringify(products)),
       featuredProducts: JSON.parse(JSON.stringify(featuredProducts)),
-      // products: products.map(db.convertDocToObj),
-      // featuredProducts: featuredProducts.map(db.convertDocToObj),
     },
   };
 }

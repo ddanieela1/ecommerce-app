@@ -1,45 +1,124 @@
-// await db.connect();
-// const products = await Product.find();
-// const res = await fetch(products);
-// res.status(200).send(products);
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
+import Typography from '@mui/material/Typography';
 
-// res.status(200).json(products);
-// await db.disconnect();
-// const res = await fetch(products);
-// const data = await res.json();
-// res.send(products);
-// res.status(200).json(products);
+const images = [
+  {
+    url: '/public/images/bluepen.jpeg',
+    title: 'Breakfast',
+    width: '40%',
+  },
+  {
+    url: '/public/images/bluepen.jpeg',
+    title: 'Burgers',
+    width: '30%',
+  },
+  {
+    url: '/public/images/bluepen.jpeg',
+    title: 'Camera',
+    width: '30%',
+  },
+];
 
-// await db.connect();
-// const products = await Product.find();
-// const res = await fetch(products);
-// res.status(200).send(products);
+const ImageButton = styled(ButtonBase)(({ theme }) => ({
+  position: 'relative',
+  height: 200,
+  [theme.breakpoints.down('sm')]: {
+    width: '100% !important', // Overrides inline-style
+    height: 100,
+  },
+  '&:hover, &.Mui-focusVisible': {
+    zIndex: 1,
+    '& .MuiImageBackdrop-root': {
+      opacity: 0.15,
+    },
+    '& .MuiImageMarked-root': {
+      opacity: 0,
+    },
+    '& .MuiTypography-root': {
+      border: '4px solid currentColor',
+    },
+  },
+}));
 
-// res.status(200).json(products);
-// await db.disconnect();
-// const res = await fetch(products);
-// const data = await res.json();
-// res.send(products);
-// res.status(200).json(products);
+const ImageSrc = styled('span')({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center 40%',
+});
 
+const Image = styled('span')(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.common.white,
+}));
 
-{/* <TableBody>
-                      {orders.map((order) => (
-                        <TableRow key={order._id}>
-                          {/* ... Other cells ... */}
-                          <TableCell>
-                            {order.isPaid
-                              ? `Paid at ${order.paidAt}`
-                              : 'Not Paid'}
-                          </TableCell>
-                          <TableCell>
-                            {order.isDelivered ? 'Delivered' : 'Not Delivered'}
-                          </TableCell>
-                          <TableCell>
-                            <NextLink href={`/order/${order._id}`} passHref>
-                              <Button variant="contained">Details</Button>
-                            </NextLink>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody> */}
+const ImageBackdrop = styled('span')(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundColor: theme.palette.common.black,
+  opacity: 0.4,
+  transition: theme.transitions.create('opacity'),
+}));
+
+const ImageMarked = styled('span')(({ theme }) => ({
+  height: 3,
+  width: 18,
+  backgroundColor: theme.palette.common.white,
+  position: 'absolute',
+  bottom: -2,
+  left: 'calc(50% - 9px)',
+  transition: theme.transitions.create('opacity'),
+}));
+
+export default function ButtonBaseDemo() {
+  return (
+    <Box
+      sx={{ display: 'flex', flexWrap: 'wrap', minWidth: 300, width: '100%' }}
+    >
+      {images.map((image) => (
+        <ImageButton
+          focusRipple
+          key={image.title}
+          style={{
+            width: image.width,
+          }}
+        >
+          <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
+          <ImageBackdrop className="MuiImageBackdrop-root" />
+          <Image>
+            <Typography
+              component="span"
+              variant="subtitle1"
+              color="inherit"
+              sx={{
+                position: 'relative',
+                p: 4,
+                pt: 2,
+                pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+              }}
+            >
+              {image.title}
+              <ImageMarked className="MuiImageMarked-root" />
+            </Typography>
+          </Image>
+        </ImageButton>
+      ))}
+    </Box>
+  );
+}

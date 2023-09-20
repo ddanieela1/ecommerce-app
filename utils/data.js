@@ -32,7 +32,7 @@ const products = [
   {
     name: 'Pen',
     slug: 'pen',
-    category: 'Stationary',
+    category: 'Pens',
     image: '/images/pen_set.jpg',
     price: '19.99',
     brand: 'Sanrio',
@@ -44,7 +44,7 @@ const products = [
   {
     name: 'Another Pen',
     slug: 'another-pen',
-    category: 'Stationary',
+    category: 'Pens',
     image: '/images/pen.webp',
     price: '19.99',
     brand: 'Sanrio',
@@ -56,7 +56,7 @@ const products = [
   {
     name: 'Cute Pen',
     slug: 'cute-pen',
-    category: 'Stationary',
+    category: 'Pens',
     image: '/images/pen.webp',
     price: '19.99',
     brand: 'Sanrio',
@@ -68,7 +68,7 @@ const products = [
   {
     name: 'Sticker',
     slug: 'sticker',
-    category: 'Stationary',
+    category: 'Sticker',
     image: '/images/stickers.webp',
     price: '19.99',
     brand: 'Paper',
@@ -82,7 +82,7 @@ const products = [
   {
     name: 'Custom Paper',
     slug: 'paper',
-    category: 'Stationary',
+    category: 'Paper',
     image: '/images/custom_paper.jpeg',
     price: '19.99',
     brand: 'Paper',
@@ -96,7 +96,7 @@ const products = [
   {
     name: 'Stationery',
     slug: 'Stationery',
-    category: 'Stationary',
+    category: 'Paper',
     image: '/images/sationery.png',
     price: '19.99',
     brand: 'Saty',

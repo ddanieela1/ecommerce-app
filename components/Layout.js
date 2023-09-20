@@ -5,6 +5,7 @@ import React, {
   useState,
   useContext,
   createContext,
+  useMediaQuery,
 } from 'react';
 
 import axios from 'axios';
@@ -30,7 +31,8 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  styled,
+  // styled,
+  Hidden,
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -43,8 +45,8 @@ import { USER_LOGOUT, USER_SIGNIN } from '../utils/Store';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import { ThemeProvider, createTheme } from '@material-ui/core';
-// import useScrollTrigger from 'react-scroll-trigger';
-import { makeStyles } from '@material-ui/core/styles';
+import ButtonBase from '@mui/material/ButtonBase';
+import { styled } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
@@ -62,15 +64,45 @@ const theme = createTheme({
 });
 
 const navBarButton = {
-  color: '#009688',
+  color: '#ffe0cf',
   textTransform: 'initial',
 };
 const pageBody = {
   body: {
     color: 'orange',
-    backgroundColor: '#ffeaec',
+    backgroundColor: '#e4edc2',
   },
 };
+
+const NavBarButton = styled(ButtonBase)(({ theme }) => ({
+  position: 'relative',
+  height: 90,
+  [theme.breakpoints.down('sm')]: {
+    width: '100% !important', // Overrides inline-style
+    height: 90,
+  },
+}));
+
+const NavBarButtonHover = styled(NavBarButton)({
+  '&:hover': {
+    '& .MuiImageMarked-root': {
+      width: '100%', // Expand the underline on hover
+    },
+  },
+});
+
+const NavBarMarked = styled('span')(({ theme }) => ({
+  height: 3,
+  width: 0,
+  backgroundColor: theme.palette.common.white,
+  position: 'absolute',
+  bottom: 20,
+  left: '50%',
+  transition: theme.transitions.create('opacity'),
+  // animation: 'underline 0.3s forwards',
+  transform: 'translateX(-50%)', // Center the underline
+  transition: 'width 0.3s ease',
+}));
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -144,26 +176,31 @@ export default function Layout({ children }) {
 
         <AppBar
           position="static"
+          className="nav-link"
           sx={{
-            backgroundColor: '#8d6e63',
+            backgroundColor: '#c5cae9',
+
             '& a': {
-              color: '#212121',
-              marginLeft: 10,
-              width: '100%',
+              color: 'black',
+
+              //   marginLeft: 10,
+              // width: '100%',
             },
           }}
         >
           <Toolbar
             sx={{
               justifyContent: 'space-between',
-              borderBottom: '1px solid #212121',
+              borderBottom: '1px solid #white',
             }}
           >
             <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
+              sx={
+                {
+                  // display: 'flex',
+                  // alignItems: 'center',
+                }
+              }
             >
               <IconButton
                 edge="start"
@@ -172,161 +209,250 @@ export default function Layout({ children }) {
               >
                 <MenuIcon />
               </IconButton>
-
-              <NextLink style={{ textDecoration: 'none' }} href="/" passHref>
-                <Link style={{ textDecoration: 'none' }}>
-                  <Typography sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
-                    Bingo
-                  </Typography>
-                </Link>
-              </NextLink>
             </Box>
             <Drawer
               anchor="left"
               open={sideBarVisible}
               onClose={sideBarCloseHandler}
             >
-              <List>
-                <ListItem>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space_between"
-                  >
-                    <Typography>Shop by category</Typography>
-                    <IconButton
-                      aria-label="close"
-                      onClick={sideBarCloseHandler}
+              <Box
+                sx={{
+                  width: '100%', // Set the width to 100% to cover the Drawer
+                  height: '10%',
+                  backgroundImage: 'url("/images/background2.webp")', // Replace with your image path
+                  backgroundRepeat: 'no-repeat',
+                  // backgroundSize: 'cover',
+                  opacity: 0.7,
+                }}
+              >
+                <List
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  <ListItem>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space_between"
                     >
-                      <CancelIcon />
-                    </IconButton>
-                  </Box>
-                </ListItem>
-                <Divider light />
-                {categories.map((category) => (
-                  <NextLink
-                    key={category}
-                    href={`/search?category=${category}`}
-                    passHref
-                  >
-                    <ListItem
-                      button
-                      component="a"
-                      onClick={sideBarCloseHandler}
+                      <Typography>Shop by category</Typography>
+                      <IconButton
+                        aria-label="close"
+                        onClick={sideBarCloseHandler}
+                      >
+                        <CancelIcon />
+                      </IconButton>
+                    </Box>
+                  </ListItem>
+
+                  <Divider light />
+                  {categories.map((category) => (
+                    <NextLink
+                      key={category}
+                      href={`/search?category=${category}`}
+                      passHref
+                      sx={{ textDecoration: 'none' }}
                     >
-                      <ListItemText primary={category}></ListItemText>
-                    </ListItem>
-                  </NextLink>
-                ))}
-              </List>
+                      <ListItem
+                        component="a"
+                        onClick={sideBarCloseHandler}
+                        sx={{
+                          color: 'black',
+                        }}
+                      >
+                        <ListItemText primary={category}></ListItemText>
+                      </ListItem>
+                    </NextLink>
+                  ))}
+                </List>
+              </Box>
             </Drawer>
 
-            <div>
-              <form onSubmit={submitHandler}>
-                <InputBase
-                  name="query"
-                  placeholder="Search Products"
-                  onChange={queryHandler}
-                />
-
-                <IconButton type="submit" aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              </form>
-            </div>
-            <NextLink
-              style={{ textDecoration: 'none' }}
-              href="/featured"
-              passHref
-            >
+            <NextLink style={{ textDecoration: 'none' }} href="/" passHref>
               <Link style={{ textDecoration: 'none' }}>
-                <Typography>featured</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
+                  Bingo
+                </Typography>
               </Link>
             </NextLink>
 
-            <NextLink
-              style={{ textDecoration: 'none' }}
-              href="/best-sellers"
-              passHref
-            >
-              <Link style={{ textDecoration: 'none' }}>
-                <Typography>Best Sellers</Typography>
-              </Link>
-            </NextLink>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '1rem',
+            <NavBarButtonHover
+              focusRipple
+              style={{
+                width: 100,
               }}
             >
-              <NextLink href="/cart" passHref>
-                <Link>
-                  <Typography component="span">
-                    {cart.cartItems.length > 0 ? (
-                      <Badge
-                        color="secondary"
-                        badgeContent={cart.cartItems.length}
-                      >
-                        Cart
-                      </Badge>
-                    ) : (
-                      'Cart'
-                    )}
-                  </Typography>
+              <NextLink
+                href="/featured"
+                passHref
+                style={{ textDecoration: 'none' }}
+              >
+                <Link
+                  style={{ textDecoration: 'none' }}
+                  component="span"
+                  variant="subtitle1"
+                  color="inherit"
+                  sx={{
+                    position: 'relative',
+                    p: 2,
+                    pt: 1,
+                    pb: (theme) => `calc(${theme.spacing(1)} + 3px)`,
+                  }}
+                >
+                  Featured
                 </Link>
               </NextLink>
 
-              {userInfo ? (
-                <>
-                  <Button
-                    // sx={{ color: 'white' }}
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={signinClickHandler}
-                    style={navBarButton}
-                  >
-                    {userInfo.name}
-                  </Button>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={signinMenuCloseHandler}
-                  >
-                    <MenuItem
-                      onClick={(e) => signinMenuCloseHandler(e, '/profile')}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      onClick={(e) =>
-                        signinMenuCloseHandler(e, '/order-history')
-                      }
-                    >
-                      Order History
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <NextLink
+              <NavBarMarked className="MuiImageMarked-root" />
+            </NavBarButtonHover>
+
+            <NavBarButtonHover
+              focusRipple
+              style={{
+                width: 100,
+              }}
+            >
+              <NextLink
+                href="/featured"
+                passHref
+                style={{ textDecoration: 'none' }}
+              >
+                <Link
                   style={{ textDecoration: 'none' }}
-                  href="/signin"
-                  passHref
+                  component="span"
+                  variant="subtitle1"
+                  color="inherit"
+                  sx={{
+                    position: 'relative',
+                    p: 2,
+                    pt: 1,
+                    pb: (theme) => `calc(${theme.spacing(1)} + 3px)`,
+                  }}
                 >
-                  Sign In
-                </NextLink>
-              )}
+                  Popular
+                </Link>
+              </NextLink>
+
+              <NavBarMarked className="MuiImageMarked-root" />
+            </NavBarButtonHover>
+
+            <Box
+              sx={
+                {
+                  // display: 'flex',
+                  // alignItems: 'center',
+                  // justifyContent: 'center',
+                  // gap: '1rem',
+                }
+              }
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '1rem',
+                }}
+              >
+                <form
+                  onSubmit={submitHandler}
+                  // style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <InputBase
+                    name="query"
+                    placeholder="Search Products"
+                    onChange={queryHandler}
+                    sx={{
+                      padding: '2px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      width: '60%',
+                    }}
+                  />
+                  <IconButton type="submit" aria-label="search">
+                    <SearchIcon />
+                  </IconButton>
+                </form>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '1rem',
+                  }}
+                >
+                  <NextLink href="/cart" passHref>
+                    <Link>
+                      <Typography component="span">
+                        {cart.cartItems.length > 0 ? (
+                          <Badge
+                            color="secondary"
+                            badgeContent={cart.cartItems.length}
+                          >
+                            Cart
+                          </Badge>
+                        ) : (
+                          'Cart'
+                        )}
+                      </Typography>
+                    </Link>
+                  </NextLink>
+
+                  {userInfo ? (
+                    <>
+                      <Button
+                        // sx={{ color: 'white' }}
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        onClick={signinClickHandler}
+                        style={navBarButton}
+                      >
+                        {userInfo.name}
+                      </Button>
+                      <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={signinMenuCloseHandler}
+                      >
+                        <MenuItem
+                          onClick={(e) => signinMenuCloseHandler(e, '/profile')}
+                        >
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          onClick={(e) =>
+                            signinMenuCloseHandler(e, '/order-history')
+                          }
+                        >
+                          Order History
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                      </Menu>
+                    </>
+                  ) : (
+                    <NextLink
+                      style={{ textDecoration: 'none' }}
+                      href="/signin"
+                      passHref
+                    >
+                      Sign In
+                    </NextLink>
+                  )}
+                </Box>
+              </Box>
             </Box>
           </Toolbar>
         </AppBar>
 
-        <div style={pageBody.body}>
-          <Container sx={{ minHeight: '80vh' }}>{children}</Container>
+        <div theme={theme.body}>
+          <Container theme={theme.body} sx={{ minHeight: '80vh' }}>
+            {children}
+          </Container>
         </div>
         <footer
           sx={{

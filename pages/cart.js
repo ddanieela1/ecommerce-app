@@ -69,7 +69,7 @@ export default function CartView() {
                   <TableRow>
                     <TableCell>Product Image</TableCell>
                     <TableCell>Name</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
+                    <TableCell align="left">Quantity</TableCell>
                     <TableCell align="right">Price</TableCell>
                     <TableCell align="right">Delete</TableCell>
                   </TableRow>
@@ -110,7 +110,7 @@ export default function CartView() {
 
                       <TableCell align="right">${item.price}</TableCell>
 
-                      <TableCell>
+                      <TableCell align="right">
                         <Button
                           color="secondary"
                           onClick={() => removeItemHandler(item)}
@@ -125,7 +125,7 @@ export default function CartView() {
             </TableContainer>
           </Grid>
           <Grid md={3} xs={12}>
-            <Card>
+            <Card sx={{ margin: '20px' }}>
               <List>
                 <ListItem>
                   <Typography align="right">

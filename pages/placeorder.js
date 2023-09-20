@@ -44,15 +44,14 @@ export default function PlaceOrder() {
   const taxPrice = round(itemsPrice * 0.15);
   const totalPrice = round(itemsPrice + shippingPrice + taxPrice);
 
-  // useEffect(() => {
-  //   if (!paymentMethod) {
-  //     router.push('/signin?redirect=/shipping');
-  //   }
-  //   if (cartItems.length === 0) {
-  //     router.push('/cart');
-  //   }
-
-  // }, []);
+  useEffect(() => {
+    if (!paymentMethod) {
+      router.push('/signin?redirect=/shipping');
+    }
+    if (cartItems.length === 0) {
+      router.push('/cart');
+    }
+  }, []);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
@@ -106,7 +105,7 @@ export default function PlaceOrder() {
 
       <Grid container spacing={1}>
         <Grid item md={9} xs={12}>
-          <Card>
+          <Card sx={{ margin: '20px' }}>
             <List>
               <ListItem>
                 <Typography component="h5" variant="h5">
@@ -138,7 +137,7 @@ export default function PlaceOrder() {
               </ListItem>
             </List>
           </Card>
-          <Card>
+          <Card sx={{ margin: '20px' }}>
             <List>
               <ListItem>
                 <Typography component="h5" variant="h5">
@@ -150,7 +149,7 @@ export default function PlaceOrder() {
               </ListItem>
             </List>
           </Card>
-          <Card>
+          <Card sx={{ margin: '20px' }}>
             <List>
               <ListItem>
                 <Typography component="h5" variant="h5">
@@ -208,7 +207,7 @@ export default function PlaceOrder() {
           </Card>
         </Grid>
         <Grid md={3} xs={12}>
-          <Card>
+          <Card sx={{ margin: '20px' }}>
             <List>
               <ListItem>
                 <Typography variant="h5">Order Summary:</Typography>

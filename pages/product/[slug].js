@@ -111,17 +111,19 @@ export default function ProductView(props) {
   return (
     <Layout title={product.name}>
       <div>
-        <NextLink href="/" passHref>
-          <Link>Back to all products</Link>
-        </NextLink>
+        <div style={{ margin: '20px 0' }}>
+          <NextLink href="/" passHref>
+            <Link>Back to all products</Link>
+          </NextLink>
+        </div>
 
         <Grid container spacing={1}>
           <Grid item md={6} xs={12}>
             <img
               src={product.image}
               alt={product.name}
-              height={640}
-              width={640}
+              height={540}
+              width={540}
               layout="responsive"
             />
           </Grid>
