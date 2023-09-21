@@ -49,7 +49,7 @@ export default function CartView() {
 
   return (
     <Layout title="Review Shopping Cart">
-      <Typography component="h1" variant="h1">
+      <Typography component="h3" variant="h3" sx={{ margin: '20px' }}>
         Cart: Checkout
       </Typography>
       {cartItems.length === 0 ? (

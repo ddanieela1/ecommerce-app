@@ -36,17 +36,18 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import CancelIcon from '@mui/icons-material/Cancel';
-
+import { teal } from '@mui/material/colors';
 import SearchIcon from '@material-ui/icons/Search';
-
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { useRouter } from 'next/router';
 import { Store } from '../utils/Store';
 import { USER_LOGOUT, USER_SIGNIN } from '../utils/Store';
 import MenuIcon from '@material-ui/icons/Menu';
-
-import { ThemeProvider, createTheme } from '@material-ui/core';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { ThemeProvider, createTheme, Card, Paper } from '@material-ui/core';
 import ButtonBase from '@mui/material/ButtonBase';
 import { styled } from '@mui/material/styles';
+import { purple, red, deepOrange } from '@mui/material/colors';
 
 const theme = createTheme({
   typography: {
@@ -64,15 +65,36 @@ const theme = createTheme({
 });
 
 const navBarButton = {
-  color: '#ffe0cf',
+  color: '#f5f5f5',
   textTransform: 'initial',
 };
 const pageBody = {
   body: {
     color: 'orange',
-    backgroundColor: '#e4edc2',
+    backgroundColor: '#f5f5f5',
+    backgroundImage: 'url("/images/opacity2-background2.webp")', // Replace with your image path
+    backgroundRepeat: 'repeat',
+    // backgroundSize: 'cover',
+  },
+  footer: {
+    marginTop: 10,
+    textAlign: 'center',
+    backgroundColor: '#004d40',
+    color: '#f5f5f5',
+    minHeight: '10vh',
   },
 };
+
+// const useStyles = makeStyles((theme) => ({
+//   borderedText: {
+//     WebkitTextFillColor: 'transparent', // For Safari/Chrome
+//     WebkitTextStroke: '2px black', // For Safari/Chrome
+//     textFillColor: 'transparent', // For Firefox/Edge
+//     MozTextStroke: '2px black', // For Firefox
+//     fontSize: '24px', // Adjust the font size as needed
+//     fontWeight: 'bold', // You can adjust font weight
+//   },
+// }));
 
 const NavBarButton = styled(ButtonBase)(({ theme }) => ({
   position: 'relative',
@@ -109,6 +131,7 @@ export default function Layout({ children }) {
   const { state, dispatch } = useContext(Store);
   const { cart, userInfo } = state;
   const [anchorEl, setAnchorEl] = useState(null);
+  const primary = deepOrange[500];
 
   const signinClickHandler = (e) => {
     setAnchorEl(e.currentTarget);
@@ -167,7 +190,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <div style={{ pageBody }}>
+    <div style={pageBody.body}>
       <Head>
         <title>{title ? `${title}-Bingo` : 'Bingo'}</title>
       </Head>
@@ -178,10 +201,10 @@ export default function Layout({ children }) {
           position="static"
           className="nav-link"
           sx={{
-            backgroundColor: '#c5cae9',
+            backgroundColor: '#004d40',
 
             '& a': {
-              color: 'black',
+              color: '#f5f5f5',
 
               //   marginLeft: 10,
               // width: '100%',
@@ -191,7 +214,7 @@ export default function Layout({ children }) {
           <Toolbar
             sx={{
               justifyContent: 'space-between',
-              borderBottom: '1px solid #white',
+              // borderBottom: '1px solid #f5f5f5',
             }}
           >
             <Box
@@ -206,6 +229,7 @@ export default function Layout({ children }) {
                 edge="start"
                 aria-label="open drawer"
                 onClick={sideBarOpenHandler}
+                color="inherit"
               >
                 <MenuIcon />
               </IconButton>
@@ -221,7 +245,7 @@ export default function Layout({ children }) {
                   height: '10%',
                   backgroundImage: 'url("/images/background2.webp")', // Replace with your image path
                   backgroundRepeat: 'no-repeat',
-                  // backgroundSize: 'cover',
+
                   opacity: 0.7,
                 }}
               >
@@ -238,7 +262,14 @@ export default function Layout({ children }) {
                       alignItems="center"
                       justifyContent="space_between"
                     >
-                      <Typography>Shop by category</Typography>
+                      <Typography
+                        sx={{
+                          color: 'black',
+                          backgroundColor: 'white',
+                        }}
+                      >
+                        Shop by category
+                      </Typography>
                       <IconButton
                         aria-label="close"
                         onClick={sideBarCloseHandler}
@@ -249,6 +280,7 @@ export default function Layout({ children }) {
                   </ListItem>
 
                   <Divider light />
+
                   {categories.map((category) => (
                     <NextLink
                       key={category}
@@ -389,13 +421,14 @@ export default function Layout({ children }) {
                       <Typography component="span">
                         {cart.cartItems.length > 0 ? (
                           <Badge
-                            color="secondary"
+                            sx={{ color: '#ff5722' }}
+                            color="primary"
                             badgeContent={cart.cartItems.length}
                           >
-                            Cart
+                            <ShoppingCartIcon sx={{ color: 'white' }} />
                           </Badge>
                         ) : (
-                          'Cart'
+                          <ShoppingCartIcon />
                         )}
                       </Typography>
                     </Link>
@@ -454,14 +487,7 @@ export default function Layout({ children }) {
             {children}
           </Container>
         </div>
-        <footer
-          sx={{
-            marginTop: 10,
-            textAlign: 'center',
-            backgroundColor: '#7c3157',
-            color: '#7c3157',
-          }}
-        >
+        <footer style={pageBody.footer}>
           <Typography sx={{ textAlign: 'center' }}>
             All rights reserved. Bingo@2023
           </Typography>
