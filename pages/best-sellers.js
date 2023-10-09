@@ -1,28 +1,23 @@
 import React from 'react';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import { styled } from '@mui/system';
-import Image from 'next/image';
-
 import NextLink from 'next/link';
 import axios from 'axios';
-import Layout from '../components/Layout';
 
-import { useContext, useEffect } from 'react';
+import Layout from '../components/Layout';
 import db from '../utils/db';
 import Product from '../models/Product';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Store } from '../utils/Store';
-import { Carousel } from 'react-responsive-carousel';
-import Box from '@mui/material/Box';
 import { users, products } from '../utils/data';
+
+import {
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActions,
+  Button,
+  Grid,
+  Card,
+  Box,
+} from '@mui/material';
 
 const addToCartHandler = async (product) => {
   const itemExists = state.cart.cartItems.find((p) => p._id === product._id);
@@ -37,13 +32,11 @@ const addToCartHandler = async (product) => {
   router.push('/cart');
 };
 
-// console.log(' bestSellingProductsProducts', bestSellingProducts);
-// console.log(' bestSellingProductsProducts length', bestSellingProducts.length);
 export default function BestSellers() {
   return (
     <Layout>
       <Box style={{ margin: '20px' }}>
-        <Typography variant="h6">Featured Products</Typography>
+        <Typography variant="h6">Best Sellers</Typography>
       </Box>
 
       <Grid container spacing={3}>
@@ -88,18 +81,28 @@ export async function getServerSideProps() {
   console.log('Fetching best selling products...');
   await db.connect();
 
-  const allProducts = await Product.find().lean();
+  try {
+    const allProducts = await Product.find().lean();
 
-  const bestSellingProducts = allProducts.filter(
-    (product) => product.rating >= 4
-  );
-  //   const bestSellingProducts = await Product.find({ rating: true }).lean();
+    const bestSellingProducts = allProducts.filter(
+      (product) => product.rating >= 4
+    );
 
-  console.log('Best selling products:', bestSellingProducts);
-  await db.disconnect();
-  return {
-    props: {
-      bestSellingProducts: JSON.parse(JSON.stringify(bestSellingProducts)),
-    },
-  };
+    console.log('Best selling products:', bestSellingProducts);
+    await db.disconnect();
+    return {
+      props: {
+        bestSellingProducts: JSON.parse(JSON.stringify(bestSellingProducts)),
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching best selling products:', error);
+    return {
+      props: {
+        bestSellingProducts,
+      },
+    };
+  } finally {
+    await db.disconnect();
+  }
 }

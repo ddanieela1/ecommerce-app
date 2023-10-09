@@ -68,7 +68,6 @@ export default function Shipping() {
   const bttnStyle = {
     margin: '10px 0',
   };
-
   return (
     <Layout title="Shipping">
       <CheckoutWizard activeStep={1} />

@@ -26,8 +26,8 @@ import {
   CircularProgress,
   Box,
 } from '@mui/material';
+
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { get } from 'mongoose';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -132,91 +132,6 @@ function Order({ params }) {
       loadPaypalScript();
     }
   }, [successPay]);
-
-  // const fetchOrderAndPaypal = async () => {
-  //   try {
-  //     dispatch({ type: 'FETCH_REQUEST' });
-  //     const { data } = await axios.get(`/api/orders/${orderId}`, {
-  //       headers: {
-  //         authorization: `Bearer ${userInfo.token}`,
-  //       },
-  //     });
-  //     console.log('Order is paid', data.isPaid);
-  //     dispatch({ type: 'FETCH_SUCCESS', payload: data });
-
-  //     if (!order._id || successPay || (order._id && order._id !== orderId)) {
-  //       if (successPay) {
-  //         dispatch({ type: 'PAY_RESET' });
-  //       }
-  //     } else {
-  //       const { data: clientId } = await axios.get('/api/keys/paypal', {
-  //         headers: {
-  //           authorization: `Bearer ${userInfo.token}`,
-  //         },
-  //       });
-  //       paypalDispatch({
-  //         type: 'resetOptions',
-  //         value: {
-  //           'client-id': clientId,
-  //           currency: ' USD',
-  //         },
-  //       });
-
-  //       paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
-  //     }
-  //   } catch (error) {
-  //     dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
-  //   }
-  // };
-
-  // // Call the fetch function when component mounts
-  // useEffect(() => {
-  //   fetchOrderAndPaypal();
-  // }, [order, successPay]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const { data } = await axios.get(`/api/orders/${orderId}`, {
-  //         headers: {
-  //           authorization: `Bearer ${userInfo.token}`,
-  //         },
-  //       });
-
-  //       const updatedOrder = data;
-
-  //       if (
-  //         !updatedOrder._id ||
-  //         successPay ||
-  //         (updatedOrder._id && updatedOrder._id !== orderId)
-  //       ) {
-  //         if (successPay) {
-  //           dispatch({ type: 'PAY_RESET' });
-  //         }
-  //       } else {
-  //         const { data: clientId } = await axios.get('/api/keys/paypal', {
-  //           headers: {
-  //             authorization: `Bearer ${userInfo.token}`,
-  //           },
-  //         });
-  //         paypalDispatch({
-  //           type: 'resetOptions',
-  //           value: {
-  //             'client-id': clientId,
-  //             currency: ' USD',
-  //           },
-  //         });
-  //         paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
-  //       }
-
-  //       dispatch({ type: 'FETCH_SUCCESS', payload: updatedOrder });
-  //     } catch (error) {
-  //       dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [order, successPay]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -400,8 +315,6 @@ function Order({ params }) {
                     </Grid>
                   </Grid>
                 </ListItem>
-                {/* <ListItem>
-                </ListItem> */}
 
                 <ListItem>
                   <Grid container>
@@ -448,4 +361,5 @@ function Order({ params }) {
 export async function getServerSideProps({ params }) {
   return { props: { params } };
 }
-export default dynamic(() => Promise.resolve(Order));
+export default Order;
+// export default () => Promise.resolve(Order);

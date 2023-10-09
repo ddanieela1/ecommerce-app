@@ -1,20 +1,16 @@
 import React, { useContext, useEffect } from 'react';
 import { Typography, TextField, Paper, Grid, Button } from '@mui/material';
-import { Store } from '@/utils/Store';
+import NextLink from 'next/link';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import NextLink from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
+
 import { getError } from '@/utils/error';
+import { Store } from '@/utils/Store';
 
 export default function Register() {
-  // const [name, setName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [confirmPassword, setConfirmPassword] = useState('');
-
   const {
     handleSubmit,
     control,
@@ -125,15 +121,6 @@ export default function Register() {
               />
             </Grid>
 
-            {/* <Grid item xs={6} sx={{ width: '100%' }}>
-            <TextField
-              variant="filled"
-              label="Last Name"
-              inputprops={{ type: 'last-name' }}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Grid> */}
-
             <Grid item xs={6}>
               <Controller
                 name="password"
@@ -192,22 +179,6 @@ export default function Register() {
                   />
                 )}
               />
-
-              <TextField
-                align="center"
-                variant="filled"
-                label="Confirm Password"
-                type="password"
-                id="confirmPassword"
-                inputprops={{ type: 'confirmPassword' }}
-                helpertext={
-                  errors.password
-                    ? errors.password.type === 'minLength'
-                      ? 'Password length meets requirements'
-                      : 'Password required'
-                    : ''
-                }
-              />
             </Grid>
             <Grid item xs={12}>
               <Controller
@@ -251,7 +222,7 @@ export default function Register() {
               <Typography>Already have an account? &nbsp;</Typography>
               <NextLink
                 // href={'/'}
-                href={`/login?redirect=${redirect || '/'}`}
+                href={`/signin?redirect=${redirect || '/'}`}
                 passHref
               >
                 <h4>Sign in</h4>

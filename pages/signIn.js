@@ -1,12 +1,16 @@
-// import * as React from 'react';
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import NextLink from 'next/link';
+import Cookies from 'js-cookie';
+import { Controller, useForm } from 'react-hook-form';
+import { useSnackbar } from 'notistack';
+import { useContext } from 'react';
+import { useRouter } from 'next/router.js';
+
 import {
   Card,
-  // Grid,
   Button,
   TextField,
-  // Box,
   InputAdornment,
   IconButton,
   FormControl,
@@ -17,22 +21,15 @@ import {
   Paper,
   Link,
 } from '@mui/material';
-import NextLink from 'next/link';
-import { Store } from '../utils/Store';
 
+import { USER_SIGNIN } from '../utils/Store.js';
+import { Store } from '../utils/Store';
+import { getError } from '@/utils/error';
+import Layout from '../components/Layout';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
-import { useRouter } from 'next/router';
-import { useState, useContext } from 'react';
 import { SettingsSystemDaydreamOutlined } from '@mui/icons-material';
-
-import Cookies from 'js-cookie';
-import { USER_SIGNIN } from '../utils/Store.js';
-import Layout from '../components/Layout';
-import { Controller, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { getError } from '@/utils/error';
 
 export default function SignIn() {
   const {
@@ -105,21 +102,6 @@ export default function SignIn() {
             </Typography>
           </div>
 
-          {/* <FormControl
-            sx={{
-              m: 1,
-              width: '15ch',
-            }}
-            variant="outlined"
-          ></FormControl>
-
-          <FormControl
-            sx={{
-              m: 1,
-              width: '25ch',
-            }}
-          > */}
-
           <Controller
             name="email"
             control={control}
@@ -133,6 +115,7 @@ export default function SignIn() {
                 placeholder="Enter email"
                 id="email"
                 name="email"
+                sx={{ margin: '9px' }}
                 inputProps={{ type: 'email' }}
                 error={Boolean(errors.email)}
                 helpertext={
@@ -197,23 +180,15 @@ export default function SignIn() {
                       </IconButton>
                     </InputAdornment>
                   }
-                  label="Password"
+                  // label="Password"
                 />
               )}
             />
           </FormControl>
           {/* --------------passs------------ */}
 
-          {/* <FormControlLabel
-          value="end"
-          control={<Checkbox />}
-          label="Remember me"
-          labelPlacement="end"
-        /> */}
           <div>
             <Button
-              // onClick={signinHandler}
-              // onClick={handleSubmit}
               color="primary"
               variant="contained"
               fullWidth

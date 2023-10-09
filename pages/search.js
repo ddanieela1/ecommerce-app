@@ -1,13 +1,21 @@
+import { useRouter } from 'next/router';
+import React, { useContext, useState } from 'react';
+import NextLink from 'next/link';
+import axios from 'axios';
+
 import Layout from '../components/Layout';
 import Product from '../models/Product';
 import db from '../utils/db';
 import { Store } from '../utils/Store';
-// import { ProductItem } from '../components/ProductItem';
+
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import CancelIcon from '@material-ui/icons/Cancel';
+
 import { MenuItem } from '@mui/base';
 import {
   Grid,
   Typography,
-  // List,
   Select,
   Button,
   Box,
@@ -17,27 +25,14 @@ import {
   CardMedia,
   CardContent,
   FormControl,
+  List,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+  ListItem,
+  Rating,
+  Pagination,
 } from '@mui/material';
-// import { ListItem } from '@mui/material';
-import ListItem from '@mui/material/ListItem';
-// import List from '@mui/material/List';
-import { useRouter } from 'next/router';
-import React, { useContext, useState } from 'react';
-import CancelIcon from '@material-ui/icons/Cancel';
-import NextLink from 'next/link';
-import axios from 'axios';
-import Rating from '@mui/material/Rating';
-import Pagination from '@mui/material/Pagination';
-// import ListItemButton from '@mui/material/ListItemButton';
-
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 
 const PAGE_SIZE = 5;
 
@@ -49,6 +44,10 @@ const prices = [
   {
     name: '$10 to $20',
     value: '10-20',
+  },
+  {
+    name: '$20 to $30',
+    value: '20-30',
   },
 ];
 
@@ -87,7 +86,7 @@ export default function Search(props) {
     if (category) query.category = category;
     if (brand) query.brand = brand;
     if (price) query.price = price;
-    if (selectedRating) query.rating = selectedRating;
+    if (rating) query.rating = rating;
     if (min) query.min ? query.min : query.min === 0 ? 0 : min;
     if (max) query.max ? query.max : query.max === 0 ? 0 : max;
 
@@ -167,18 +166,23 @@ export default function Search(props) {
                   <List component="div" disablePadding>
                     {categories &&
                       categories.map((category) => (
-                        <ListItemButton
-                          sx={{ pl: 4, display: 'block' }}
-                          onClick={() => categoryHandler(category)}
+                        <div
+                          key={category}
+                          style={{ display: 'flex', flexDirection: 'column' }}
                         >
-                          <ListItemText
-                            primary={category}
-                            key={category}
-                            value={category}
+                          <ListItemButton
+                            sx={{ pl: 4, display: 'block' }}
+                            onClick={() => categoryHandler(category)}
                           >
-                            {category}
-                          </ListItemText>
-                        </ListItemButton>
+                            <ListItemText
+                              primary={category}
+                              key={category}
+                              value={category}
+                            >
+                              {category}
+                            </ListItemText>
+                          </ListItemButton>
+                        </div>
                       ))}
                   </List>
                 </Collapse>
@@ -227,17 +231,18 @@ export default function Search(props) {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {prices.map((priceOption, index) => (
-                      <div
-                        key={brand}
+                      // <div
+                      //   key={price}
+                      //   style={{ display: 'flex', flexDirection: 'column' }}
+                      // >
+                      <ListItemButton
+                        key={index}
+                        onClick={() => priceHandler(priceOption.value)}
                         style={{ display: 'flex', flexDirection: 'column' }}
                       >
-                        <ListItemButton
-                          key={index}
-                          onClick={() => priceHandler(priceOption.value)}
-                        >
-                          {priceOption.name}
-                        </ListItemButton>
-                      </div>
+                        {priceOption.name}
+                      </ListItemButton>
+                      // </div>
                     ))}
                   </List>
                 </Collapse>
@@ -275,7 +280,7 @@ export default function Search(props) {
                   {[
                     { label: 'Featured', value: 'featured' },
                     { label: 'Price: High to Low', value: 'price-desc' },
-                    { label: 'Price: High to Low', value: 'price-asc' },
+                    { label: 'Price: Low to High', value: 'price-asc' },
                     { label: 'Costumer Reviews', value: 'toprated' },
                     { label: 'Newest Arrivals', value: 'newest' },
                   ].map((sortOption) => (
@@ -327,10 +332,6 @@ export default function Search(props) {
                   key={product.name}
                   sx={{ marginBottom: '20px', marginTop: '20px' }}
                 >
-                  {/* <ProductItem
-                  product={product}
-                  addToCartHandler={addToCartHandler}
-                /> */}
                   <Card>
                     <NextLink href={`/product/${product.slug}`} passHref>
                       <CardActionArea>
@@ -361,7 +362,6 @@ export default function Search(props) {
                   </Card>
                 </Grid>
               ))}
-              {/* </Grid> */}
             </Grid>
 
             <Pagination
@@ -400,8 +400,16 @@ export async function getServerSideProps({ query }) {
 
   const categoryFilter = category && category !== 'all' ? { category } : {};
   const brandFilter = brand && brand !== 'all' ? { brand } : {};
+  // const ratingFilter =
+  //   rating && rating !== 'all' ? { rating: { $gte: Number(rating) } } : {};
+
+  // const ratingFilter =
+  //   rating && rating !== 'all' ? { rating: { $gt: Number(rating) } } : {};
+  // console.log('Rating:', rating);
+  // console.log('Rating Filter:', ratingFilter);
+
   const ratingFilter =
-    rating && rating !== 'all' ? { rating: { $gte: Number(rating) } } : {};
+    rating && rating !== 'all' ? { rating: Number(rating) } : {};
 
   const priceFilter =
     price && price !== 'all'
@@ -442,6 +450,7 @@ export async function getServerSideProps({ query }) {
     .skip(pageSize * (page - 1))
     .limit(pageSize)
     .lean();
+  console.log('Database Query:', productDocs);
 
   const countProducts = await Product.countDocuments({
     ...queryFilter,

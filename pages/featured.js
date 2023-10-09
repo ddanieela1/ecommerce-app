@@ -1,27 +1,25 @@
 import React from 'react';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import { styled } from '@mui/system';
-import Image from 'next/image';
-
+import { useContext, useEffect } from 'react';
 import NextLink from 'next/link';
 import axios from 'axios';
-import Layout from '../components/Layout';
 
-import { useContext, useEffect } from 'react';
-import db from '../utils/db';
+import { CarouselContainer } from '../utils/styles';
 import Product from '../models/Product';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Store } from '../utils/Store';
-import { Carousel } from 'react-responsive-carousel';
-import Box from '@mui/material/Box';
+import Layout from '../components/Layout';
+import db from '../utils/db';
+
+import {
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActions,
+  Button,
+  Grid,
+  Card,
+  Box,
+} from '@mui/material';
+
 import { users, products } from '../utils/data';
 
 const addToCartHandler = async (product) => {
@@ -37,7 +35,11 @@ const addToCartHandler = async (product) => {
   router.push('/cart');
 };
 
-export default function Featured() {
+export default function Featured(featuredProducts) {
+  console.log('Featured Products Type in Component:', typeof featuredProducts);
+  console.log('Featured Products in Component:', featuredProducts);
+
+  const filterFeaturedProducts = featuredProducts.featuredProducts;
   return (
     <Layout>
       <Box style={{ margin: '20px' }}>
@@ -45,38 +47,43 @@ export default function Featured() {
       </Box>
 
       <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid item md={4} key={product.name}>
-            <Card>
-              <NextLink href={`/product/${product.slug}`} passHref>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    image={product.image}
-                    title={product.name}
-                    alt={product.name}
-                    sx={{ height: 140 }}
+        {Array.isArray(filterFeaturedProducts) &&
+        filterFeaturedProducts.length > 0 ? (
+          filterFeaturedProducts.map((product) => (
+            <Grid item md={4} key={product.name}>
+              <Card>
+                <NextLink href={`/product/${product.slug}`} passHref>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      image={product.image}
+                      title={product.name}
+                      alt={product.name}
+                      sx={{ height: 140 }}
+                    >
+                      {/* <img src={product.image}></img> */}
+                    </CardMedia>
+                    <CardContent>
+                      <Typography>{product.name}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </NextLink>
+                <CardActions>
+                  <Typography>${product.price}</Typography>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => addToCartHandler(product)}
                   >
-                    {/* <img src={product.image}></img> */}
-                  </CardMedia>
-                  <CardContent>
-                    <Typography>{product.name}</Typography>
-                  </CardContent>
-                </CardActionArea>
-              </NextLink>
-              <CardActions>
-                <Typography>${product.price}</Typography>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => addToCartHandler(product)}
-                >
-                  Add to cart
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+                    Add to cart
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <Typography>No products</Typography>
+        )}
       </Grid>
     </Layout>
   );
@@ -86,13 +93,27 @@ export async function getServerSideProps() {
   console.log('Fetching featured products...');
   await db.connect();
 
-  const featuredProducts = await Product.find({ isFeatured: true }).lean();
+  try {
+    const featuredProducts = await Product.find({ isFeatured: true }).lean();
+    const featuredProductsArray = Array.from(featuredProducts)
+      ? featuredProducts
+      : [];
 
-  console.log('Featured Products:', featuredProducts);
-  await db.disconnect();
-  return {
-    props: {
-      featuredProducts: JSON.parse(JSON.stringify(featuredProducts)),
-    },
-  };
+    console.log('Featured Products:', featuredProducts);
+    await db.disconnect();
+    return {
+      props: {
+        featuredProducts: JSON.parse(JSON.stringify(featuredProductsArray)),
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+    return {
+      props: {
+        featuredProducts,
+      },
+    };
+  } finally {
+    await db.disconnect();
+  }
 }

@@ -1,14 +1,15 @@
 import NextLink from 'next/link';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
-import Layout from '../components/Layout';
-import { getError } from '../utils/error';
-import { Store } from '../utils/Store';
-import { useRouter } from 'next/router';
-import CheckoutWizard from '../components/CheckoutWizard';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+
+import Layout from '../components/Layout';
+import { getError } from '../utils/error';
+import { Store } from '../utils/Store';
+import CheckoutWizard from '../components/CheckoutWizard';
 
 import axios from 'axios';
 import {
@@ -99,7 +100,7 @@ export default function PlaceOrder() {
   return (
     <Layout title="Review Order">
       <CheckoutWizard activeStep={4}></CheckoutWizard>
-      <Typography component="h1" variant="h1">
+      <Typography component="h1" variant="h3">
         Place Order
       </Typography>
 

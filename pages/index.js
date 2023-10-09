@@ -1,39 +1,41 @@
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import { styled } from '@mui/system';
-import Image from 'next/image';
-
+import { useContext, useEffect } from 'react';
 import NextLink from 'next/link';
 import axios from 'axios';
-import Layout from '../components/Layout';
+import Image from 'next/image';
 
-import { useContext, useEffect } from 'react';
-import db from '../utils/db';
-import Product from '../models/Product';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Store } from '../utils/Store';
 import { Carousel } from 'react-responsive-carousel';
-import Box from '@mui/material/Box';
-import { users, products } from '../utils/data';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-// import pen_set from '../public/images/pen_set.jpg';
+import db from '../utils/db';
+import Product from '../models/Product';
+import Layout from '../components/Layout';
+import { Store } from '../utils/Store';
 
-// const carouselContainer = {
-//   marginBottom: '80px',
-//   backgroundColor: '#ffffff',
-// };
+import { styled } from '@mui/system';
+
+import {
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActions,
+  Button,
+  Grid,
+  Card,
+} from '@mui/material';
 
 const CarouselContainer = styled('div')({
   marginTop: '20px',
   backgroundColor: '#ffffff',
+});
+
+const ShopNowButton = styled(Button)({
+  position: 'absolute',
+  bottom: '20px',
+  left: '50%',
+  transform: 'translateX(-50%)',
 });
 
 export default function Home(props) {
@@ -80,8 +82,14 @@ export default function Home(props) {
                       height={300}
                       loading="lazy"
                       responsive
-                      // style={{ height: 'auto' }}
                     />
+                    <ShopNowButton
+                      variant="contained"
+                      color="primary"
+                      // onClick={() => router.push(`/product${product.slug}`)}
+                    >
+                      Shop Now
+                    </ShopNowButton>
                   </NextLink>
                 </div>
               );
@@ -91,7 +99,7 @@ export default function Home(props) {
           <p>Loading ...</p>
         )}
       </CarouselContainer>
-      {/* <h1>Products</h1> */}
+
       <Grid container spacing={3}>
         {products.map((product) => (
           <Grid item md={4} key={product.name}>
@@ -104,20 +112,25 @@ export default function Home(props) {
                     title={product.name}
                     alt={product.name}
                     sx={{ height: 140 }}
-                  >
-                    {/* <img src={product.image}></img> */}
-                  </CardMedia>
+                  ></CardMedia>
                   <CardContent>
                     <Typography>{product.name}</Typography>
                   </CardContent>
                 </CardActionArea>
               </NextLink>
-              <CardActions>
+              <CardActions
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  display: 'flex',
+                }}
+              >
                 <Typography>${product.price}</Typography>
                 <Button
                   size="small"
                   color="primary"
                   onClick={() => addToCartHandler(product)}
+                  sx={{ marginLeft: 'auto' }}
                 >
                   Add to cart
                 </Button>
@@ -142,8 +155,6 @@ export async function getServerSideProps() {
     props: {
       products: JSON.parse(JSON.stringify(products)),
       featuredProducts: JSON.parse(JSON.stringify(featuredProducts)),
-      // products: products.map(db.convertDocToObj),
-      // featuredProducts: featuredProducts.map(db.convertDocToObj),
     },
   };
 }
