@@ -33,6 +33,7 @@
     "react-hook-form": "^7.45.2",
     "react-material-ui-carousel": "^3.4.2",
     "react-paypal-js": "^0.0.1-security",
-    "react-responsive-carousel": "^3.2.23"
+    "react-responsive-carousel": "^3.2.23",
+    "webpack": "^5.88.2"
   }
 }
