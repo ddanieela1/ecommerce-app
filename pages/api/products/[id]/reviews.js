@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import onError from '../../../../utils/error';
+import { onError } from '../../../../utils/error';
 import db from '../../../../utils/db';
 import { isAuth } from '../../../../utils/auth';
 import Product from '../../../../models/Product';

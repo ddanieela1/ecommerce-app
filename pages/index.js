@@ -31,12 +31,12 @@ const CarouselContainer = styled('div')({
   backgroundColor: '#ffffff',
 });
 
-const ShopNowButton = styled(Button)({
-  position: 'absolute',
-  bottom: '20px',
-  left: '50%',
-  transform: 'translateX(-50%)',
-});
+// const ShopNowButton = styled(Button)({
+//   position: 'absolute',
+//   bottom: '20px',
+//   left: '50%',
+//   transform: 'translateX(-50%)',
+// });
 
 export default function Home(props) {
   const router = useRouter();
@@ -83,13 +83,6 @@ export default function Home(props) {
                       loading="lazy"
                       responsive
                     />
-                    <ShopNowButton
-                      variant="contained"
-                      color="primary"
-                      // onClick={() => router.push(`/product${product.slug}`)}
-                    >
-                      Shop Now
-                    </ShopNowButton>
                   </NextLink>
                 </div>
               );

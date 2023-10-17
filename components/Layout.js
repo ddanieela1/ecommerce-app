@@ -1,4 +1,4 @@
-import React, { title, children, useEffect, useState, useContext } from 'react';
+import React, { children, useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import NextLink from 'next/link';
@@ -72,7 +72,7 @@ const theme = createTheme({
   },
 });
 
-export default function Layout({ children }) {
+export default function Layout({ title, children }) {
   const ITEM_HEIGHT = 85;
   const router = useRouter();
   const { state, dispatch } = useContext(Store);

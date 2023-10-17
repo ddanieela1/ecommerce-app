@@ -31,7 +31,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
 import { SettingsSystemDaydreamOutlined } from '@mui/icons-material';
 
-export default function SignIn() {
+export default function Signin() {
   const {
     handleSubmit,
     control,

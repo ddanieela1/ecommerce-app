@@ -349,12 +349,19 @@ export default function Search(props) {
                         </CardContent>
                       </CardActionArea>
                     </NextLink>
-                    <CardActions>
+                    <CardActions
+                      sx={{
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        display: 'flex',
+                      }}
+                    >
                       <Typography>${product.price}</Typography>
                       <Button
                         size="small"
                         color="primary"
                         onClick={() => addToCartHandler(product)}
+                        sx={{ marginLeft: 'auto' }}
                       >
                         Add to cart
                       </Button>

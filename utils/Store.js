@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { createContext, useReducer } from 'react';
+export const USER_LOGOUT = 'USER_LOGOUT';
 
 export const Store = createContext('');
 
