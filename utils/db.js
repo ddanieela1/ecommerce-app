@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+// import dotenv from 'dotenv';
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -6,6 +7,7 @@ dotenv.config();
 const connection = {};
 
 async function connect() {
+  console.log('MongoDB URI:', process.env.MONGODB_URI);
   if (connection.isConnected) {
     console.log('already connected');
     return;
@@ -19,17 +21,13 @@ async function connect() {
     await mongoose.disconnect();
   }
 
-  try {
-    const db = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
-    console.log('new connection');
-    connection.isConnected = db.connections[0].readyState;
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-  }
+  const db = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // useCreateIndex: true,
+  });
+  console.log('new connection');
+  connection.isConnected = db.connections[0].readyState;
 }
 
 async function disconnect() {
