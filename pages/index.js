@@ -31,13 +31,6 @@ const CarouselContainer = styled('div')({
   backgroundColor: '#ffffff',
 });
 
-// const ShopNowButton = styled(Button)({
-//   position: 'absolute',
-//   bottom: '20px',
-//   left: '50%',
-//   transform: 'translateX(-50%)',
-// });
-
 export default function Home(props) {
   const router = useRouter();
   const { products, featuredProducts } = props;
