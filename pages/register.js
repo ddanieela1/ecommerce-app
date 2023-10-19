@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 
-import { getError } from '@/utils/error';
-import { Store } from '@/utils/Store';
+import { getError } from '../utils/error';
+import { Store } from '../utils/Store';
 
 export default function Register() {
   const {
@@ -39,6 +39,7 @@ export default function Register() {
     }
 
     try {
+      console.log('Before request');
       const { data } = await axios.post('/api/users/register', {
         name,
         email,
@@ -46,20 +47,25 @@ export default function Register() {
       });
       console.log('submitted data:', name, email, password);
       console.log('response data:', data);
-
+      console.log('After request');
       dispatch({ type: USER_REGISTER, payload: data });
       Cookies.set('userInfo', data);
       router.push(redirect || '/');
 
       console.log(userInfo);
     } catch (error) {
-      enqueueSnackbar(getError(err), {
+      console.error('Error in submit handdler', error);
+      console.error('Error details:', error.response);
+      enqueueSnackbar(getError(error), {
         variant: 'error',
       });
     }
-    console.log('error');
-    console.log('error.response');
-    console.log(' error.response?.data?.message');
+    console.log('error', error);
+    console.log('error.response:', error.response);
+    console.log(
+      ' error.response?.data?.message:',
+      error.response?.data?.message
+    );
   };
 
   const paperStyle = {

@@ -2,12 +2,12 @@ import React from 'react';
 import { useContext, useEffect } from 'react';
 import NextLink from 'next/link';
 import axios from 'axios';
-
+import { useRouter } from 'next/router';
 import { CarouselContainer } from '../utils/styles';
 import Product from '../models/Product';
 import Layout from '../components/Layout';
 import db from '../utils/db';
-
+import { Store } from '../utils/Store';
 import {
   CardActionArea,
   CardContent,
@@ -22,20 +22,23 @@ import {
 
 import { users, products } from '../utils/data';
 
-const addToCartHandler = async (product) => {
-  const itemExists = state.cart.cartItems.find((p) => p._id === product._id);
-  const quantity = itemExists ? itemExists.quantity + 1 : 1;
-
-  const { data } = await axios.get(`/api/products/${product._id}`);
-  if (data.inStock < quantity) {
-    window.alert('Product out of stock');
-    return;
-  }
-  dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity } });
-  router.push('/cart');
-};
-
 export default function Featured(featuredProducts) {
+  const router = useRouter();
+  const { state, dispatch } = useContext(Store);
+
+  const addToCartHandler = async (product) => {
+    const itemExists = state.cart.cartItems.find((p) => p._id === product._id);
+    const quantity = itemExists ? itemExists.quantity + 1 : 1;
+
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.inStock < quantity) {
+      window.alert('Product out of stock');
+      return;
+    }
+    dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity } });
+    router.push('/cart');
+  };
+
   console.log('Featured Products Type in Component:', typeof featuredProducts);
   console.log('Featured Products in Component:', featuredProducts);
 

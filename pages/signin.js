@@ -60,7 +60,7 @@ export default function Signin() {
     closeSnackbar();
     // check user & pass match
     try {
-      const token = Cookies.get('userInfo')?.token;
+      // const token = Cookies.get('userInfo')?.token;
       const { data } = await axios.post(
         'api/users/signin',
 
@@ -68,6 +68,11 @@ export default function Signin() {
           email,
           password,
         }
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // }
       );
       dispatch({ type: 'USER_SIGNIN', payload: data });
       Cookies.set('userInfo', data);
@@ -157,7 +162,7 @@ export default function Signin() {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   name="password"
-                  inputprops={{ type: 'password' }}
+                  inputProps={{ type: 'password' }}
                   error={Boolean(errors.password)}
                   helpertext={
                     errors.password
