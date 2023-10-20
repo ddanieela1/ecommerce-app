@@ -22,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@material-ui/icons/Search';
 import ButtonBase from '@mui/material/ButtonBase';
+import { EnqueueSnackbar } from 'notistack';
 
 import { styled } from '@mui/material/styles';
 import { deepOrange } from '@mui/material/colors';
