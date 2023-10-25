@@ -74,6 +74,7 @@ export default function Signin() {
         //   },
         // }
       );
+      // console.log('This is my token:', token);
       dispatch({ type: 'USER_SIGNIN', payload: data });
       Cookies.set('userInfo', data);
       router.push(redirect || '/');

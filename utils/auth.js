@@ -1,20 +1,28 @@
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 // const { jwt } = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const signToken = (user) => {
-  return jwt.sign(
-    {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    },
+  try {
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
 
-    process.env.JWT_SECRET,
-    {
-      expiresIn: '30d',
-    }
-  );
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '30d',
+      }
+    );
+
+    return token;
+  } catch (error) {
+    console.error('Error signing in with JWT:', error);
+    throw new Error('JWT signing failed');
+  }
 };
 
 const isAuth = async (req, res, next) => {
