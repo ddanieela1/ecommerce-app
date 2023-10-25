@@ -1,6 +1,6 @@
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 // const { jwt } = require('jsonwebtoken');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 const signToken = (user) => {
   try {
