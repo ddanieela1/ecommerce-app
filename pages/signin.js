@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { useContext } from 'react';
 import { useRouter } from 'next/router.js';
+import dynamic from 'next/dynamic';
 
 import {
   Card,
@@ -31,7 +32,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
 import { SettingsSystemDaydreamOutlined } from '@mui/icons-material';
 
-export default function Signin() {
+function Signin() {
   const {
     handleSubmit,
     control,
@@ -51,7 +52,9 @@ export default function Signin() {
     }
   }, []);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -180,7 +183,7 @@ export default function Signin() {
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
-                        onChange={(e) => setPassword(e.target.value)}
+                        // onChange={(e) => setPassword(e.target.value)}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -195,11 +198,11 @@ export default function Signin() {
 
           <div>
             <Button
-              color="primary"
+              size="small"
               variant="contained"
-              fullWidth
-              style={bttnStyle}
+              color="primary"
               type="submit"
+              // sx={{ backgroundColor: '#cdbde1' }}
             >
               Sign In
             </Button>
@@ -220,3 +223,5 @@ export default function Signin() {
     </Layout>
   );
 }
+
+export default dynamic(() => Promise.resolve(Signin), { ssr: false });

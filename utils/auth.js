@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken';
+require('dotenv').config();
 // const { jwt } = require('jsonwebtoken');
 // const jwt = require('jsonwebtoken');
 
 const signToken = (user) => {
   try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined');
+    }
     const token = jwt.sign(
       {
         _id: user._id,

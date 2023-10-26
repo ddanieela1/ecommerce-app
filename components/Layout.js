@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-
+import dynamic from 'next/dynamic';
 import { Store } from '../utils/Store';
 import {
   navBarButton,
@@ -73,7 +73,7 @@ const theme = createTheme({
   },
 });
 
-export default function Layout({ title, children }) {
+function Layout({ title, children }) {
   const ITEM_HEIGHT = 85;
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
@@ -478,3 +478,5 @@ export default function Layout({ title, children }) {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(Layout), { ssr: false });
